@@ -522,14 +522,10 @@ const CrounusXEXABI = [
 ]
 
 const rpcURL = "https://rpc.testnet.fantom.network/"
-let web3, crounusXEXContract, xexContract;
-web3 = new Web3(new Web3.providers.HttpProvider(rpcURL));
-
-// using web3 just as a helper to generate the transaction
-// (see the `data` field and `encodeABI`) - not to sign it
-
+const web3 = new Web3(new Web3.providers.HttpProvider(rpcURL));
 
 const playPoints = 12500
+let currentDisableButtons = []
 
 async function approveToken(button, text) {
 
@@ -548,6 +544,7 @@ async function approveToken(button, text) {
         console.log("approval", formattedApproval)
         if (formattedApproval >= playPoints) {
             await fight(button, text, signer)
+            handlePermitButton()
             return
         }
 
@@ -556,12 +553,14 @@ async function approveToken(button, text) {
 
         console.log("approve rc", tx?.hash)
         await fight(button, text, signer)
+        handlePermitButton()
 
     } catch (e) {
         console.log("approve Error", e)
         const timeout = setTimeout(() => {
             button.classList.remove("loading-fight-button");
             text.classList.remove("hidden");
+            handlePermitButton()
             clearTimeout(timeout);
         }, 1000);
     }
@@ -585,6 +584,8 @@ async function fight(button, text, signer) {
         fightResult.innerHTML = result ? "Win" : "Lose";
         localStorage.setItem("isWin", result)
 
+        window.location.replace("/game/index.html");
+        console.log("game game")
         button.classList.remove("loading-fight-button");
         text.classList.remove("hidden");
 
@@ -622,30 +623,29 @@ function getTransactionReceiptMined(txHash, interval) {
     } else {
         throw new Error("Invalid Type: " + txHash);
     }
-};
-
-
-async function getRevertReason(txHash){
-
-    const tx = await web3.eth.getTransaction(txHash)
-
-    var result = await web3.eth.call(tx, tx.blockNumber)
-
-    result = result.startsWith('0x') ? result : `0x${result}`
-
-    if (result && result.substr(138)) {
-
-        const reason = web3.utils.toAscii(result.substr(138))
-        console.log('Revert reason:', reason)
-        return reason
-
-    } else {
-
-        console.log('Cannot get reason - No return value')
-
-    }
-
 }
+
+// async function getRevertReason(txHash){
+//
+//     const tx = await web3.eth.getTransaction(txHash)
+//
+//     var result = await web3.eth.call(tx, tx.blockNumber)
+//
+//     result = result.startsWith('0x') ? result : `0x${result}`
+//
+//     if (result && result.substr(138)) {
+//
+//         const reason = web3.utils.toAscii(result.substr(138))
+//         console.log('Revert reason:', reason)
+//         return reason
+//
+//     } else {
+//
+//         console.log('Cannot get reason - No return value')
+//
+//     }
+//
+// }
 
 const death = document.getElementById("death")
 const deathText = document.getElementById("death-text")
@@ -654,7 +654,24 @@ const demonText = document.getElementById("demon-text")
 const skeleton = document.getElementById("skeleton")
 const skeletonText = document.getElementById("skeleton-text")
 
+function handleDisableButton(buttonList) {
+    buttonList.forEach((item) => {
+        item.classList.remove("btn-fight")
+        item.classList.add("btn-disable")
+        currentDisableButtons.push(item)
+    })
+}
+
+function handlePermitButton() {
+    currentDisableButtons.forEach((item) => {
+        item.classList.remove("btn-disable")
+        item.classList.add("btn-fight")
+    })
+    currentDisableButtons = []
+}
+
 death.addEventListener('click', async () => {
+    handleDisableButton([demon, skeleton])
     death.classList.add("loading-fight-button")
     deathText.classList.add("hidden")
     console.log('fight death')
@@ -662,6 +679,7 @@ death.addEventListener('click', async () => {
     await approveToken(death, deathText)
 })
 demon.addEventListener('click', async () => {
+    handleDisableButton([death, skeleton])
     demon.classList.add("loading-fight-button")
     demonText.classList.add("hidden")
     console.log('fight demon');
@@ -669,6 +687,7 @@ demon.addEventListener('click', async () => {
     await approveToken(demon, demonText)
 })
 skeleton.addEventListener('click', async () => {
+    handleDisableButton([death, demon])
     skeleton.classList.add("loading-fight-button")
     skeletonText.classList.add("hidden")
     console.log('fight skeleton');

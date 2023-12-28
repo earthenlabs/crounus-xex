@@ -61,6 +61,25 @@
 .btn-fight > .fight-loading {
     display: none;
 }
+.btn-disable {
+    cursor: not-allowed !important;
+    pointer-events: none !important;
+    width: 60%;
+    margin-top: 0.75rem;
+    margin-bottom: 0.75rem;
+    padding: 1rem;
+    background: #FF7E01;
+    filter: brightness(50%);
+    display: inline-block;
+    position: relative;
+    text-align: center;
+    font-family: 'customFont', cursive;
+    text-decoration: none;
+    color: black;
+    text-shadow: 1px 0 #fff, -1px 0 #fff, 0 1px #fff, 0 -1px #fff,
+    1px 1px #fff, -1px -1px #fff, 1px -1px #fff, -1px 1px #fff;
+    box-shadow: inset -4px -4px 0 0 #CD6304;
+}
 
 /* Loading dots styles */
 @keyframes opacity {
