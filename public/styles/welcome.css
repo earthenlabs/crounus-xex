@@ -1,0 +1,211 @@
+/*
+    CSS file for index.html
+*/
+
+.bg-welcome {
+    background-image: url("../assets/background/welcome-scene.png");
+    background-size: cover;
+}
+
+.title {
+    color: #F24E1E;
+    font-size: 60px;
+    font-weight: 400;
+    line-height: 98px;
+    word-wrap: break-word;
+    text-shadow: 6px 0 #000, -6px 0 #000, 0 6px #000, 0 -6px #000,
+    5px 5px #000, -5px -5px #000, 5px -5px #000, -5px 5px #000;
+}
+
+.modal-container {
+    position: relative;
+}
+.modal-content {
+    position: absolute;
+    width: calc(100% - 4rem);
+    height: calc(100% - 4rem);
+    top: 2rem;
+    left: 2rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+.wallet-connect-image {
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+}
+#connect-result {
+    text-align: center;
+    padding-bottom: 3rem;
+}
+
+.main-menu-image {
+    width: calc(100vw/4);
+    height: calc(300vh/5);
+}
+.main-menu-container {
+    position: relative;
+}
+.btn-menu-container {
+    position: absolute;
+    width: calc(100% - 4rem);
+    height: calc(100% - 4rem);
+    top: 2rem;
+    left: 2rem;
+}
+.btn-menu-wrapper {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.btn-menu {
+    width: 60%;
+    margin-top: 0.75rem;
+    margin-bottom: 0.75rem;
+    padding: 1rem;
+    background: #FCBD80;
+    display: inline-block;
+    position: relative;
+    text-align: center;
+    font-family: 'customFont', cursive;
+    text-decoration: none;
+    color: black;
+    box-shadow: inset -4px -4px 0 0 #BC8C61;
+}
+.btn-menu:before,
+.btn-menu:after {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    box-sizing: content-box;
+}
+.btn-menu:before {
+    top: -6px;
+    left: 0;
+    border-top: 6px #451B0B solid;
+    border-bottom: 6px #451B0B solid;
+}
+.btn-menu:after {
+    top: 0;
+    left: -6px;
+    border-left: 6px #451B0B solid;
+    border-right: 6px #451B0B solid;
+}
+.btn-menu:hover, .btn-menu:focus {
+    background: rgba(252, 189, 128, 0.85);
+    box-shadow: inset -6px -6px 0 0 #BC8C61;
+}
+.btn-menu:active {
+    box-shadow: inset 4px 4px 0 0 #BC8C61;
+}
+
+@media screen and (min-width: 2560px) {
+    .main-menu-image {
+        width: calc(100vw/4);
+        height: calc(200vh/3);
+    }
+}
+
+/* Loading dots styles */
+@keyframes opacity {
+    0% { opacity: 1; }
+    100% { opacity: 0; }
+}
+
+.loadingButton {
+    pointer-events: none;
+}
+
+.loadingButton #loading {
+    display: flex;
+}
+
+#loading {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    border-radius: 99px;
+}
+
+#loading span:not(:last-child) {
+    margin-right: 5px;
+}
+
+#loading span {
+    animation-name: opacity;
+    animation-duration: 1s;
+    animation-iteration-count: infinite;
+}
+
+#loading span:nth-child(2) {
+    animation-delay: 100ms;
+}
+
+#loading span:nth-child(3) {
+    animation-delay: 300ms;
+}
+
+
+.btn-info {
+    display: flex;
+    align-items: center;
+    font-size: 10px;
+    width: 60%;
+    margin-top: 0.5rem;
+    margin-bottom: 0.5rem;
+    padding: 0.7rem;
+    background: #FF7E01;
+    position: relative;
+    text-align: center;
+    font-family: 'customFont', cursive;
+    text-decoration: none;
+    color: white;
+    text-shadow: 1px 0 #000, -1px 0 #000, 0 1px #000, 0 -1px #000,
+    1px 1px #000, -1px -1px #000, 1px -1px #000, -1px 1px #000;
+    box-shadow: inset -4px -4px 0 0 #CD6304;
+}
+.btn-info:before,
+.btn-info:after {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    box-sizing: content-box;
+}
+.btn-info:before {
+    top: -3px;
+    left: 0;
+    border-top: 3px #1E1E1E solid;
+    border-bottom: 3px #1E1E1E solid;
+}
+.btn-info:after {
+    top: 0;
+    left: -3px;
+    border-left: 3px #1E1E1E solid;
+    border-right: 3px #1E1E1E solid;
+}
+.btn-info:hover, .btn-info:focus {
+    background: rgba(255, 126, 1, 0.9);
+    box-shadow: inset -3px -3px 0 0 #CD6304;
+}
+.btn-info:active {
+    box-shadow: inset 4px 4px 0 0 #CD6304;
+}
+
+.btn-info-icon {
+    width: 1.5rem;
+    height: 1.5rem;
+    margin-right: 0.75rem;
+}

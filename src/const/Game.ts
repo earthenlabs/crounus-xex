@@ -1,0 +1,5 @@
+// THIS CONST USE FOR GAME CONST
+
+export const WINDOW_WIDTH = 1280
+export const WINDOW_HEIGHT = 720
+export const GAME_GRAVITY = 300

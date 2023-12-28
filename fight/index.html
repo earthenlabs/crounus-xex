@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>Crounus XEX | Fight</title>
+	<link rel="stylesheet" href="/styles/global.css">
+	<link rel="stylesheet" href="/styles/fight.css">
+</head>
+
+<body>
+<div class="bg-fight relative">
+	<div class="h-10">
+		<div class="h-full w-full flex items-center justify-end">
+			<div class="w-1/6">
+				<div class="p-4 text-white">
+					Result: <span id="fight-result"></span>
+				</div>
+			</div>
+			<div class="w-1/12">
+				<div class="p-4">
+					<a href="/" type="button" class="eightbit-btn btn-secondary">
+						<img src="/assets/icon/home.svg" alt="kebab icon" class="w-6 h-6">
+					</a>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="h-screen w-screen flex justify-center items-center">
+		<div class="select-character-container">
+			<div class="character-card">
+				<img src="/assets/character/death.gif" alt="death character"/>
+				<button id="death" class="btn-fight h-12">
+					<span id="death-text">Fight</span>
+					<span class="fight-loading"><span>&bull;</span><span>&bull;</span><span>&bull;</span></span>
+				</button>
+			</div>
+			<div class="character-card">
+				<img src="/assets/character/demon.gif" alt="demon character"/>
+				<button id="demon" class="btn-fight h-12">
+					<span id="demon-text">Fight</span>
+					<span class="fight-loading"><span>&bull;</span><span>&bull;</span><span>&bull;</span></span>
+				</button>
+			</div>
+			<div class="character-card">
+				<img src="/assets/character/skeleton.gif" alt="skeleton character"/>
+				<button id="skeleton" class="btn-fight h-12">
+					<span id="skeleton-text">Fight</span>
+					<span class="fight-loading"><span>&bull;</span><span>&bull;</span><span>&bull;</span></span>
+				</button>
+			</div>
+		</div>
+	</div>
+</div>
+<!--<script src="https://cdn.jsdelivr.net/npm/web3@latest/dist/web3.min.js"></script>-->
+<!--<script src="-->
+<!--https://cdn.jsdelivr.net/npm/web3-utils@4.1.0/lib/commonjs/index.min.js-->
+<!--"></script>-->
+<script
+		src="https://cdnjs.cloudflare.com/ajax/libs/web3/4.0.1-alpha.5/web3.min.js"
+		integrity="sha512-NfffVWpEqu1nq+658gzlJQilRBOvjs+PhEKSjT9gkQXRy9OfxI2TOXr33zS7MgGyTpBa5qtC6mKJkQGd9dN/rw=="
+		crossorigin="anonymous"
+		referrerpolicy="no-referrer"
+></script>
+<script src="https://cdn.ethers.io/lib/ethers-5.2.umd.min.js"
+		type="application/javascript"></script>
+<script type="module" src="/js/metamask.js"></script>
+<script type="module" src="/js/fight.js"></script>
+</body>
+
+</html>

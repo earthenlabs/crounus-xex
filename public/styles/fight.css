@@ -1,0 +1,115 @@
+/*
+    CSS file for fight.html
+*/
+
+.bg-fight {
+    background-image: url("../assets/background/fight-scene.png");
+    background-size: cover;
+}
+
+.select-character-container {
+    width: 80%;
+    height: 80%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.btn-fight {
+    width: 60%;
+    margin-top: 0.75rem;
+    margin-bottom: 0.75rem;
+    padding: 1rem;
+    background: #FF7E01;
+    display: inline-block;
+    position: relative;
+    text-align: center;
+    font-family: 'customFont', cursive;
+    text-decoration: none;
+    color: black;
+    text-shadow: 1px 0 #fff, -1px 0 #fff, 0 1px #fff, 0 -1px #fff,
+    1px 1px #fff, -1px -1px #fff, 1px -1px #fff, -1px 1px #fff;
+    box-shadow: inset -4px -4px 0 0 #CD6304;
+}
+.btn-fight:before,
+.btn-fight:after {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    box-sizing: content-box;
+}
+.btn-fight:before {
+    top: -3px;
+    left: 0;
+    border-top: 3px #1E1E1E solid;
+    border-bottom: 3px #1E1E1E solid;
+}
+.btn-fight:after {
+    top: 0;
+    left: -3px;
+    border-left: 3px #1E1E1E solid;
+    border-right: 3px #1E1E1E solid;
+}
+.btn-fight:hover, .btn-fight:focus {
+    background: rgba(255, 126, 1, 0.9);
+    box-shadow: inset -3px -3px 0 0 #CD6304;
+}
+.btn-fight:active {
+    box-shadow: inset 4px 4px 0 0 #CD6304;
+}
+.btn-fight > .fight-loading {
+    display: none;
+}
+
+/* Loading dots styles */
+@keyframes opacity {
+    0% { opacity: 1; }
+    100% { opacity: 0; }
+}
+
+.loading-fight-button {
+    pointer-events: none;
+}
+
+.loading-fight-button .fight-loading {
+    display: flex;
+}
+
+.fight-loading {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    border-radius: 99px;
+}
+
+.fight-loading span:not(:last-child) {
+    margin-right: 5px;
+}
+
+.fight-loading span {
+    animation-name: opacity;
+    animation-duration: 1s;
+    animation-iteration-count: infinite;
+}
+
+.fight-loading span:nth-child(2) {
+    animation-delay: 100ms;
+}
+
+.fight-loading span:nth-child(3) {
+    animation-delay: 300ms;
+}
+
+.character-card {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}

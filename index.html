@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>Crounus XEX</title>
+<!--	&lt;!&ndash; minify &ndash;&gt;-->
+<!--	<link href="https://unpkg.com/nes.css@2.3.0/css/nes.min.css" rel="stylesheet" />-->
+<!--	&lt;!&ndash; latest &ndash;&gt;-->
+<!--	<link href="https://unpkg.com/nes.css@latest/css/nes.min.css" rel="stylesheet" />-->
+<!--	&lt;!&ndash; core style only &ndash;&gt;-->
+<!--	<link href="https://unpkg.com/nes.css/css/nes-core.min.css" rel="stylesheet" />-->
+<!--	<link href="https://fonts.googleapis.com/css?family=Press+Start+2P" rel="stylesheet">-->
+
+	<link rel="stylesheet" href="/styles/global.css">
+	<link rel="stylesheet" href="/styles/welcome.css">
+</head>
+
+<body>
+<div class="bg-welcome h-screen w-screen">
+	<div class="h-20 relative">
+		<div class="absolute top-0 left-0 h-full w-full flex justify-center items-center title">
+			Crounus XEX
+		</div>
+		<div class="absolute top-0 left-0 h-full w-full flex justify-end items-center">
+			<div class="w-1/4 p-4">
+				<div class="flex flex-column justify-center items-center">
+					<button class="btn-info">
+						<img src="/assets/icon/person.svg" alt="person icon" class="btn-info-icon"/>
+						<div id="walletID">Not Connected</div>
+					</button>
+					<button class="btn-info">
+						<img src="/assets/icon/xex-logo.png" alt="xex icon" class="btn-info-icon"/>
+						<div id="xex-balance">0</div>
+					</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="h-70 flex justify-center items-center">
+		<div id="main-menu" class="main-menu-container">
+			<img src="/assets/background/main-menu.png" alt="main menu" class="main-menu-image"/>
+			<div class="btn-menu-container">
+				<div class="btn-menu-wrapper">
+					<button id="start-btn" class="btn-menu">Start</button>
+					<button class="btn-menu">Guide</button>
+					<button class="btn-menu">Ranking</button>
+				</div>
+			</div>
+		</div>
+		<div id="connect-modal" class="modal-container hidden">
+			<img src="/assets/background/popup.png" alt="connect modal" class="connect-modal-image"/>
+			<div class="modal-content">
+				<div id="connect-result" class="hidden"></div>
+				<img src="/assets/icon/metamask.svg" alt="metamask icon" class="wallet-connect-image"/>
+				<button id="connect-button" class="btn-menu h-12">
+					<span id="connect-text">Connect</span>
+					<span id="loading"><span>&bull;</span><span>&bull;</span><span>&bull;</span></span>
+				</button>
+			</div>
+		</div>
+	</div>
+
+	<div class="h-10">
+		<div class="h-full w-full flex items-center justify-between">
+			<div class="w-1/6 flex">
+				<div class="p-4">
+					<button type="button" class="eightbit-btn btn-secondary">
+						<img src="/assets/icon/kebab-menu.svg" alt="kebab icon" class="w-6 h-6">
+					</button>
+				</div>
+				<div class="p-4">
+					<button type="button" class="eightbit-btn btn-secondary">
+						<img src="/assets/icon/sound.svg" alt="kebab icon" class="w-6 h-6">
+					</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/web3@1.7.0/dist/web3.min.js"></script>
+<script type="module" src="/js/metamask.js"></script>
+<script type="module" src="/js/crounusXEX.js"></script>
+
+</body>
+
+</html>
