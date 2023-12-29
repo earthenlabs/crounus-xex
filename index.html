@@ -5,14 +5,10 @@
 	<meta charset="UTF-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 	<title>Crounus XEX</title>
-<!--	&lt;!&ndash; minify &ndash;&gt;-->
-<!--	<link href="https://unpkg.com/nes.css@2.3.0/css/nes.min.css" rel="stylesheet" />-->
-<!--	&lt;!&ndash; latest &ndash;&gt;-->
-<!--	<link href="https://unpkg.com/nes.css@latest/css/nes.min.css" rel="stylesheet" />-->
-<!--	&lt;!&ndash; core style only &ndash;&gt;-->
-<!--	<link href="https://unpkg.com/nes.css/css/nes-core.min.css" rel="stylesheet" />-->
-<!--	<link href="https://fonts.googleapis.com/css?family=Press+Start+2P" rel="stylesheet">-->
-
+	<link
+			rel="stylesheet"
+			href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"
+	/>
 	<link rel="stylesheet" href="/styles/global.css">
 	<link rel="stylesheet" href="/styles/welcome.css">
 </head>
@@ -26,9 +22,10 @@
 		<div class="absolute top-0 left-0 h-full w-full flex justify-end items-center">
 			<div class="w-1/4 p-4">
 				<div class="flex flex-column justify-center items-center">
-					<button class="btn-info">
+					<button class="btn-info" id="btn-xdon-info">
 						<img src="/assets/icon/person.svg" alt="person icon" class="btn-info-icon"/>
 						<div id="walletID">Not Connected</div>
+						<img id="xdon-holder" src="/assets/icon/star.gif" alt="star icon" class="btn-info-icon"/>
 					</button>
 					<button class="btn-info">
 						<img src="/assets/icon/xex-logo.png" alt="xex icon" class="btn-info-icon"/>
@@ -75,6 +72,11 @@
 					<button type="button" class="eightbit-btn btn-secondary">
 						<img src="/assets/icon/sound.svg" alt="kebab icon" class="w-6 h-6">
 					</button>
+				</div>
+			</div>
+			<div class="w-1/3">
+				<div class="p-4 flex justify-end items-center text">
+					<div id="xdon-holder-info" class="xdon-info h-6 pr-2 hidden">Boosted Rewards for Xexadons</div>
 				</div>
 			</div>
 		</div>

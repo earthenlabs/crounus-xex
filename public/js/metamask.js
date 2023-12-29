@@ -79,7 +79,7 @@ connectButton.addEventListener("click", async () => {
             const accounts = await ethereum.request({ method: "eth_requestAccounts" })
             const account = accounts[0];
 
-            walletID.innerHTML = `<span>${account.substr(0, 6)}...${account.substr(account.length - 7)}</span>`;
+            walletID.innerHTML = `<span>${account.substr(0, 5)}...${account.substr(account.length - 4)}</span>`;
             connectButton.classList.add('hidden');
             connectResult.classList.remove('hidden');
             connectResult.innerHTML = 'Successful'
