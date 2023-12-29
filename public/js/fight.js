@@ -591,8 +591,8 @@ async function fight(button, text, signer) {
         const [player, number, result] = event.args;
         console.log("fight result", tx?.hash, player, number, result)
 
-        const fightResult = document.getElementById("fight-result")
-        fightResult.innerHTML = result ? "Win" : "Lose";
+        // const fightResult = document.getElementById("fight-result")
+        // fightResult.innerHTML = result ? "Win" : "Lose";
         localStorage.setItem("isWin", result)
 
         window.location.replace("/game/index.html");
