@@ -191,7 +191,6 @@ const web3 = new Web3(new Web3.providers.HttpProvider(rpcURL))
 
 const xexContract = new web3.eth.Contract(IERC20ABI, XEXContractAddress)
 
-localStorage.setItem('startGame', '1')
 let currentAccount = localStorage.getItem('sserdda')
 const start = document.getElementById('start-btn')
 const xexBalanceBlock = document.getElementById('xex-balance')
@@ -223,7 +222,7 @@ function handleAccountsChanged(accounts) {
         currentAccount = accounts[0];
         localStorage.setItem('sserdda', currentAccount)
     }
-
+    localStorage.setItem('startGame', '1')
     window.location.replace('/game/index.html')
 }
 

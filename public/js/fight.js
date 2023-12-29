@@ -527,18 +527,29 @@ const web3 = new Web3(new Web3.providers.HttpProvider(rpcURL));
 const playPoints = 12500
 let currentDisableButtons = []
 
+const xexBalanceBlock = document.getElementById('xex-balance')
+
+const provider = new ethers.providers.Web3Provider(window.ethereum)
+await provider.send("eth_requestAccounts", [])
+const signer = provider.getSigner()
+const address = await signer.getAddress()
+localStorage.setItem('sserdda', address)
+
+const xexContract = new ethers.Contract(XEXContractAddress, IERC20ABI, signer)
+
+ethereum
+    .request({ method: 'eth_accounts' })
+    .then((accounts) => {
+        if (accounts.length !== 0) {
+            let account = accounts[0]
+            walletID.innerHTML = `<span>${account.substr(0, 6)}...${account.substr(account.length - 7)}</span>`;
+        }
+    })
+    .catch(console.error);
+
 async function approveToken(button, text) {
 
     try {
-
-        const provider = new ethers.providers.Web3Provider(window.ethereum)
-        await provider.send("eth_requestAccounts", [])
-        const signer = provider.getSigner()
-        const address = await signer.getAddress()
-        localStorage.setItem('sserdda', address)
-
-        const xexContract = new ethers.Contract(XEXContractAddress, IERC20ABI, signer)
-
         let approval = await xexContract.allowance(address, CrounusXEXContractAddress)
         const formattedApproval = ethers.utils.formatUnits(approval, 18)
         console.log("approval", formattedApproval)
@@ -624,6 +635,25 @@ function getTransactionReceiptMined(txHash, interval) {
         throw new Error("Invalid Type: " + txHash);
     }
 }
+
+async function getTokenBalance() {
+    try {
+        let currentAccount = localStorage.getItem('sserdda')
+        const accounts = await ethereum.request({ method: 'eth_requestAccounts' });
+        if (accounts[0] !== currentAccount) {
+            currentAccount = accounts[0];
+            localStorage.setItem('sserdda', currentAccount)
+        }
+        let result = await xexContract.balanceOf(currentAccount);
+        // Convert the value from Wei to Ether
+        const formattedResult = ethers.utils.formatUnits(result, 18)
+        xexBalanceBlock.innerHTML = new Intl.NumberFormat("en-US").format(formattedResult)
+    } catch (error) {
+        console.log("getTokenBalanceError", error)
+    }
+}
+
+getTokenBalance();
 
 // async function getRevertReason(txHash){
 //
