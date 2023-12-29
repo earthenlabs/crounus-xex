@@ -590,6 +590,7 @@ async function fight(button, text, signer) {
         const event = rc.events.find(event => event.event === 'PlayGame');
         const [player, number, result] = event.args;
         console.log("fight result", tx?.hash, player, number, result)
+        localStorage.setItem('transactionHash', tx?.hash)
 
         // const fightResult = document.getElementById("fight-result")
         // fightResult.innerHTML = result ? "Win" : "Lose";
