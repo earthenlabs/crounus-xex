@@ -1,4 +1,4 @@
-const CrounusXEXContractAddress = "0xCf58501E249f37a01a70eae75c9F9A9A8aa6D800"
+const CrounusXEXContractAddress = "0x37EaE2CC52e8a5B0a3fF09366f1a81ca2B429Fb4"
 const XEXContractAddress = "0xed8d4140f09ddcD0B62022193b9A2DdA158064a8"
 const IERC20ABI = [
     {
@@ -192,6 +192,11 @@ const CrounusXEXABI = [
                 "internalType": "contract IERC20",
                 "name": "_rewardToken",
                 "type": "address"
+            },
+            {
+                "internalType": "contract IERC721",
+                "name": "_xdonToken",
+                "type": "address"
             }
         ],
         "stateMutability": "nonpayable",
@@ -236,6 +241,12 @@ const CrounusXEXABI = [
                 "internalType": "bool",
                 "name": "result",
                 "type": "bool"
+            },
+            {
+                "indexed": false,
+                "internalType": "uint256",
+                "name": "winAmount",
+                "type": "uint256"
             }
         ],
         "name": "PlayGame",
@@ -291,6 +302,20 @@ const CrounusXEXABI = [
     {
         "inputs": [],
         "name": "WIN_RATE",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function",
+        "constant": true
+    },
+    {
+        "inputs": [],
+        "name": "extraWinPoints",
         "outputs": [
             {
                 "internalType": "uint256",
@@ -393,6 +418,20 @@ const CrounusXEXABI = [
         "constant": true
     },
     {
+        "inputs": [],
+        "name": "xdonToken",
+        "outputs": [
+            {
+                "internalType": "contract IERC721",
+                "name": "",
+                "type": "address"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function",
+        "constant": true
+    },
+    {
         "stateMutability": "payable",
         "type": "receive",
         "payable": true
@@ -447,6 +486,33 @@ const CrounusXEXABI = [
             }
         ],
         "name": "setWinPoints",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "getExtraWinPoints",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function",
+        "constant": true
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "uint256",
+                "name": "_extraWinPoints",
+                "type": "uint256"
+            }
+        ],
+        "name": "setExtraWinPoints",
         "outputs": [],
         "stateMutability": "nonpayable",
         "type": "function"
@@ -548,7 +614,7 @@ ethereum
     .catch(console.error);
 
 async function approveToken(button, text) {
-
+    localStorage.setItem('startGame', '1')
     try {
         let approval = await xexContract.allowance(address, CrounusXEXContractAddress)
         const formattedApproval = ethers.utils.formatUnits(approval, 18)
@@ -582,18 +648,18 @@ async function fight(button, text, signer) {
         const contract = new ethers.Contract(CrounusXEXContractAddress, CrounusXEXABI, signer);
 
         const tx = await contract.playGame({
-            value: "10000000000000000",
+            value: "100000000000000000",
             gasLimit: 6721975,
             gasPrice: 20000000000,
         });
         const rc = await tx.wait(); // 0ms, as tx is already confirmed
         const event = rc.events.find(event => event.event === 'PlayGame');
-        const [player, number, result] = event.args;
-        console.log("fight result", tx?.hash, player, number, result)
+        console.log(event)
+        const [player, number, result, winAmount] = event.args;
+        console.log("fight result", tx?.hash, player, number, result, winAmount)
         localStorage.setItem('transactionHash', tx?.hash)
+        localStorage.setItem('winAmount', winAmount)
 
-        // const fightResult = document.getElementById("fight-result")
-        // fightResult.innerHTML = result ? "Win" : "Lose";
         localStorage.setItem("isWin", result)
 
         window.location.replace("/game/index.html");
