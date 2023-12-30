@@ -1075,7 +1075,7 @@ ethereum
     .catch(console.error);
 
 async function approveToken(button, text) {
-    localStorage.setItem('startGame', '1')
+    // localStorage.setItem('startGame', '1')
     try {
         let approval = await xexContract.allowance(address, CrounusXEXContractAddress)
         const formattedApproval = ethers.utils.formatUnits(approval, 18)
