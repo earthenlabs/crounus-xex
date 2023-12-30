@@ -670,6 +670,7 @@ ethereum
     .catch(console.error);
 
 start.addEventListener('click', () => {
+    localStorage.setItem('startGame', '1')
     ethereum.request({ method: 'eth_accounts' }).then(handleAccountsChanged).catch(console.error);
 })
 
@@ -697,7 +698,6 @@ function handleAccountsChanged(accounts) {
         currentAccount = accounts[0];
         localStorage.setItem('sserdda', currentAccount)
     }
-    localStorage.setItem('startGame', '1')
     window.location.replace('/game/index.html')
 }
 
