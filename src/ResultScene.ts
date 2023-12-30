@@ -143,7 +143,8 @@ export default class ResultScene extends Phaser.Scene {
     if (this.winner == theChosenOne) {
       this.isWin = true;
       this.winText.text = "You've Won! ";
-      this.rewardText.text = "Rewards: 20,000 XEX";
+      const winAmount = localStorage.getItem("winAmount") || "0";
+      this.rewardText.text = `Rewards: ${winAmount} XEX`;
     }
 
     this.deathBrain = new CharacterBrain(this.death, CharacterName.Death);
