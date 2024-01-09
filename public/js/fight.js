@@ -1,4 +1,4 @@
-const CrounusXEXContractAddress = "0x37EaE2CC52e8a5B0a3fF09366f1a81ca2B429Fb4"
+const CrounusXEXContractAddress = "0xB12cFA16C9A485CE4c506C174ADb0d04e4645Cc1"
 const XEXContractAddress = "0xed8d4140f09ddcD0B62022193b9A2DdA158064a8"
 const XDONContractAddress = "0x20217df76D9b92be72F7D9343374Bb05235c96F7"
 
@@ -249,6 +249,12 @@ const CrounusXEXABI = [
                 "internalType": "uint256",
                 "name": "winAmount",
                 "type": "uint256"
+            },
+            {
+                "indexed": false,
+                "internalType": "uint256",
+                "name": "jackpotAmount",
+                "type": "uint256"
             }
         ],
         "name": "PlayGame",
@@ -289,7 +295,7 @@ const CrounusXEXABI = [
     },
     {
         "inputs": [],
-        "name": "RANDOM_RANGE",
+        "name": "GAME_RANDOM_RANGE",
         "outputs": [
             {
                 "internalType": "uint256",
@@ -303,7 +309,7 @@ const CrounusXEXABI = [
     },
     {
         "inputs": [],
-        "name": "WIN_RATE",
+        "name": "GAME_WIN_RATE",
         "outputs": [
             {
                 "internalType": "uint256",
@@ -317,7 +323,91 @@ const CrounusXEXABI = [
     },
     {
         "inputs": [],
-        "name": "extraWinPoints",
+        "name": "JACKPOT_RANDOM_RANGE",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function",
+        "constant": true
+    },
+    {
+        "inputs": [],
+        "name": "JACKPOT_REWARD_RATE",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function",
+        "constant": true
+    },
+    {
+        "inputs": [],
+        "name": "JACKPOT_WIN_RATE",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function",
+        "constant": true
+    },
+    {
+        "inputs": [],
+        "name": "WIN_POINTS_RANGE",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function",
+        "constant": true
+    },
+    {
+        "inputs": [],
+        "name": "defaultPlayPoints",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function",
+        "constant": true
+    },
+    {
+        "inputs": [],
+        "name": "extraWinPointsMultiplier",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function",
+        "constant": true
+    },
+    {
+        "inputs": [],
+        "name": "jackpotPoints",
         "outputs": [
             {
                 "internalType": "uint256",
@@ -351,20 +441,6 @@ const CrounusXEXABI = [
                 "internalType": "address",
                 "name": "",
                 "type": "address"
-            }
-        ],
-        "stateMutability": "view",
-        "type": "function",
-        "constant": true
-    },
-    {
-        "inputs": [],
-        "name": "playPoints",
-        "outputs": [
-            {
-                "internalType": "uint256",
-                "name": "",
-                "type": "uint256"
             }
         ],
         "stateMutability": "view",
@@ -407,7 +483,7 @@ const CrounusXEXABI = [
     },
     {
         "inputs": [],
-        "name": "winPoints",
+        "name": "winPointsMultiplier",
         "outputs": [
             {
                 "internalType": "uint256",
@@ -467,7 +543,7 @@ const CrounusXEXABI = [
     },
     {
         "inputs": [],
-        "name": "getWinPoints",
+        "name": "getWinPointsMultiplier",
         "outputs": [
             {
                 "internalType": "uint256",
@@ -483,18 +559,18 @@ const CrounusXEXABI = [
         "inputs": [
             {
                 "internalType": "uint256",
-                "name": "_winPoints",
+                "name": "_winPointsMultiplier",
                 "type": "uint256"
             }
         ],
-        "name": "setWinPoints",
+        "name": "setWinPointsMultiplier",
         "outputs": [],
         "stateMutability": "nonpayable",
         "type": "function"
     },
     {
         "inputs": [],
-        "name": "getExtraWinPoints",
+        "name": "getExtraWinPointsMultiplier",
         "outputs": [
             {
                 "internalType": "uint256",
@@ -510,18 +586,18 @@ const CrounusXEXABI = [
         "inputs": [
             {
                 "internalType": "uint256",
-                "name": "_extraWinPoints",
+                "name": "_extraWinPointsMultiplier",
                 "type": "uint256"
             }
         ],
-        "name": "setExtraWinPoints",
+        "name": "setExtraWinPointsMultiplier",
         "outputs": [],
         "stateMutability": "nonpayable",
         "type": "function"
     },
     {
         "inputs": [],
-        "name": "getPlayPoints",
+        "name": "getDefaultPlayPoints",
         "outputs": [
             {
                 "internalType": "uint256",
@@ -537,11 +613,11 @@ const CrounusXEXABI = [
         "inputs": [
             {
                 "internalType": "uint256",
-                "name": "_playPoints",
+                "name": "_defaultPlayPoints",
                 "type": "uint256"
             }
         ],
-        "name": "setPlayPoints",
+        "name": "setDefaultPlayPoints",
         "outputs": [],
         "stateMutability": "nonpayable",
         "type": "function"
@@ -574,7 +650,13 @@ const CrounusXEXABI = [
         "type": "function"
     },
     {
-        "inputs": [],
+        "inputs": [
+            {
+                "internalType": "uint256",
+                "name": "inputPoints",
+                "type": "uint256"
+            }
+        ],
         "name": "playGame",
         "outputs": [
             {
@@ -1045,7 +1127,7 @@ const XDONABI = [
 const rpcURL = "https://rpc.testnet.fantom.network/"
 const web3 = new Web3(new Web3.providers.HttpProvider(rpcURL));
 
-const playPoints = 12500
+let playPoints = 12500
 let currentDisableButtons = []
 
 const xexBalanceBlock = document.getElementById('xex-balance')
@@ -1081,7 +1163,7 @@ async function approveToken(button, text) {
         const formattedApproval = ethers.utils.formatUnits(approval, 18)
         console.log("approval", formattedApproval)
         if (formattedApproval >= playPoints) {
-            await fight(button, text, signer)
+            await fight(button, text, signer, playPoints)
             handlePermitButton()
             return
         }
@@ -1090,7 +1172,7 @@ async function approveToken(button, text) {
         const rc = await tx.wait(); // 0ms, as tx is already confirmed
 
         console.log("approve rc", tx?.hash)
-        await fight(button, text, signer)
+        await fight(button, text, signer, playPoints)
         handlePermitButton()
 
     } catch (e) {
@@ -1104,11 +1186,11 @@ async function approveToken(button, text) {
     }
 }
 
-async function fight(button, text, signer) {
+async function fight(button, text, signer, playPoints) {
     try {
         const contract = new ethers.Contract(CrounusXEXContractAddress, CrounusXEXABI, signer);
 
-        const tx = await contract.playGame({
+        const tx = await contract.playGame(playPoints, {
             value: "100000000000000000",
             gasLimit: 6721975,
             gasPrice: 20000000000,
@@ -1116,15 +1198,15 @@ async function fight(button, text, signer) {
         const rc = await tx.wait(); // 0ms, as tx is already confirmed
         const event = rc.events.find(event => event.event === 'PlayGame');
         console.log(event)
-        const [player, number, result, winAmount] = event.args;
-        console.log("fight result", tx?.hash, player, number, result, winAmount)
+        const [player, number, result, winAmount, jackpotAmount] = event.args;
+        console.log("fight result", tx?.hash, player, number, result, winAmount, jackpotAmount)
         localStorage.setItem('transactionHash', tx?.hash)
         localStorage.setItem('winAmount', winAmount)
 
         localStorage.setItem("isWin", result)
+        localStorage.setItem("isWinJackpot", jackpotAmount > 0)
 
         window.location.replace("/game/index.html");
-        console.log("game game")
         button.classList.remove("loading-fight-button");
         text.classList.remove("hidden");
 
