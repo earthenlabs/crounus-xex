@@ -1,4 +1,4 @@
-const CrounusXEXContractAddress = "0xB12cFA16C9A485CE4c506C174ADb0d04e4645Cc1"
+const CrounusXEXContractAddress = "0xeDE739Db796FB9C837546654D3782aCcF2628886"
 const XEXContractAddress = "0xed8d4140f09ddcD0B62022193b9A2DdA158064a8"
 const XDONContractAddress = "0x20217df76D9b92be72F7D9343374Bb05235c96F7"
 
@@ -1127,7 +1127,9 @@ const XDONABI = [
 const rpcURL = "https://rpc.testnet.fantom.network/"
 const web3 = new Web3(new Web3.providers.HttpProvider(rpcURL));
 
-let playPoints = 12500
+const DEFAULT_PLAY_POINTS = 12500
+const MAX_PLAY_POINTS = 1000000
+let playPoints = DEFAULT_PLAY_POINTS
 let currentDisableButtons = []
 
 const xexBalanceBlock = document.getElementById('xex-balance')
@@ -1141,7 +1143,10 @@ localStorage.setItem('sserdda', address)
 
 const xexContract = new ethers.Contract(XEXContractAddress, IERC20ABI, signer)
 const xdonContract = new ethers.Contract(XDONContractAddress, XDONABI, signer)
+const crounusXEXcontract = new ethers.Contract(CrounusXEXContractAddress, CrounusXEXABI, signer);
 let xdonAmount = 0;
+let winPointsMultiplier = 240;
+let extraWinPointsMultiplier = 280;
 
 ethereum
     .request({ method: 'eth_accounts' })
@@ -1152,19 +1157,23 @@ ethereum
             xdonAmount = parseInt(result)
             if (xdonAmount < 1) xdonHolder.classList.add("hidden")
             walletID.innerHTML = `<span>${account.substr(0, 5)}...${account.substr(account.length - 4)}</span>`;
+
+            const winPointsMultiplierHex = await crounusXEXcontract.getWinPointsMultiplier()
+            const extraWinPointsMultiplierHex = await crounusXEXcontract.getExtraWinPointsMultiplier()
+            winPointsMultiplier = parseInt(winPointsMultiplierHex)
+            extraWinPointsMultiplier = parseInt(extraWinPointsMultiplierHex)
         }
     })
     .catch(console.error);
 
-async function approveToken(button, text) {
-    // localStorage.setItem('startGame', '1')
+async function approveToken() {
+    console.log("playPoints: ", playPoints)
     try {
         let approval = await xexContract.allowance(address, CrounusXEXContractAddress)
         const formattedApproval = ethers.utils.formatUnits(approval, 18)
         console.log("approval", formattedApproval)
-        if (formattedApproval >= playPoints) {
-            await fight(button, text, signer, playPoints)
-            handlePermitButton()
+        if (parseInt(formattedApproval) >= parseInt(playPoints)) {
+            await fight()
             return
         }
 
@@ -1172,25 +1181,23 @@ async function approveToken(button, text) {
         const rc = await tx.wait(); // 0ms, as tx is already confirmed
 
         console.log("approve rc", tx?.hash)
-        await fight(button, text, signer, playPoints)
-        handlePermitButton()
+        await fight()
 
     } catch (e) {
         console.log("approve Error", e)
         const timeout = setTimeout(() => {
-            button.classList.remove("loading-fight-button");
-            text.classList.remove("hidden");
-            handlePermitButton()
+            confirmFightButton.classList.remove("loading-fight-button");
+            confirmFightButtonText.classList.remove("hidden");
+            backButton.classList.add("btn-input")
+            backButton.classList.remove("btn-disable-input")
             clearTimeout(timeout);
         }, 1000);
     }
 }
 
-async function fight(button, text, signer, playPoints) {
+async function fight() {
     try {
-        const contract = new ethers.Contract(CrounusXEXContractAddress, CrounusXEXABI, signer);
-
-        const tx = await contract.playGame(playPoints, {
+        const tx = await crounusXEXcontract.playGame(playPoints, {
             value: "100000000000000000",
             gasLimit: 6721975,
             gasPrice: 20000000000,
@@ -1207,14 +1214,16 @@ async function fight(button, text, signer, playPoints) {
         localStorage.setItem("isWinJackpot", jackpotAmount > 0)
 
         window.location.replace("/game/index.html");
-        button.classList.remove("loading-fight-button");
-        text.classList.remove("hidden");
+        confirmFightButton.classList.remove("loading-fight-button");
+        confirmFightButtonText.classList.remove("hidden");
 
     } catch (e) {
         console.log("sendError", e)
         const timeout = setTimeout(() => {
-            button.classList.remove("loading-fight-button");
-            text.classList.remove("hidden");
+            confirmFightButton.classList.remove("loading-fight-button");
+            confirmFightButtonText.classList.remove("hidden");
+            backButton.classList.add("btn-input")
+            backButton.classList.remove("btn-disable-input")
             clearTimeout(timeout);
         }, 1000);
     }
@@ -1288,13 +1297,16 @@ getTokenBalance();
 // }
 
 const death = document.getElementById("death")
-const deathText = document.getElementById("death-text")
 const demon = document.getElementById("demon")
-const demonText = document.getElementById("demon-text")
 const skeleton = document.getElementById("skeleton")
-const skeletonText = document.getElementById("skeleton-text")
 const btnXdonHolderInfo = document.getElementById("btn-xdon-info")
 const xdonHolderInfo = document.getElementById("xdon-holder-info")
+const inputXexContainer = document.getElementById("input-xex-container")
+const inputXex = document.getElementById("input-xex")
+const rewardXex = document.getElementById("reward-xex")
+const backButton = document.getElementById("back-button")
+const confirmFightButton = document.getElementById("confirm-fight-button")
+const confirmFightButtonText = document.getElementById("confirm-fight-text")
 
 function handleDisableButton(buttonList) {
     buttonList.forEach((item) => {
@@ -1312,30 +1324,44 @@ function handlePermitButton() {
     currentDisableButtons = []
 }
 
+function calculateReward() {
+    inputXexContainer.classList.remove("hidden")
+    rewardXex.value = new Intl.NumberFormat("en-US")
+        .format(DEFAULT_PLAY_POINTS * (xdonAmount > 0 ? extraWinPointsMultiplier : winPointsMultiplier) / 100)
+}
+
+backButton.addEventListener("click", () => {
+    inputXexContainer.classList.add("hidden")
+    handlePermitButton()
+})
+
+confirmFightButton.addEventListener("click", async () => {
+    confirmFightButton.classList.add("loading-fight-button")
+    confirmFightButtonText.classList.add("hidden")
+    backButton.classList.remove("btn-input")
+    backButton.classList.add("btn-disable-input")
+    await approveToken()
+})
+
 death.addEventListener('click', async () => {
     handleDisableButton([demon, skeleton])
-    death.classList.add("loading-fight-button")
-    deathText.classList.add("hidden")
+    calculateReward()
     console.log('fight death')
     localStorage.setItem('theChosenOne', '0')
-    await approveToken(death, deathText)
 })
 demon.addEventListener('click', async () => {
     handleDisableButton([death, skeleton])
-    demon.classList.add("loading-fight-button")
-    demonText.classList.add("hidden")
+    calculateReward()
     console.log('fight demon');
     localStorage.setItem('theChosenOne', '1')
-    await approveToken(demon, demonText)
 })
 skeleton.addEventListener('click', async () => {
     handleDisableButton([death, demon])
-    skeleton.classList.add("loading-fight-button")
-    skeletonText.classList.add("hidden")
+    calculateReward()
     console.log('fight skeleton');
     localStorage.setItem('theChosenOne', '2')
-    await approveToken(skeleton, skeletonText)
 })
+
 btnXdonHolderInfo.onmouseover = function () {
     if (xdonAmount > 0) {
         xdonHolderInfo.classList.remove("hidden")
@@ -1347,4 +1373,31 @@ btnXdonHolderInfo.onmouseout = function () {
         xdonHolderInfo.classList.add("hidden")
     }
     // xdonHolderInfo.classList.remove("animate__animated animate__fadeInRight")
+}
+
+inputXex.onkeypress = function (event) {
+    const char = event.key
+    const re = /\d/
+    if (!re.test(char)) return false
+    const inputValue = inputXex.value;
+    let currentValue = inputValue + char;
+    if (parseInt(currentValue) < DEFAULT_PLAY_POINTS) {
+        rewardXex.value = 0
+    } else if (parseInt(currentValue) > MAX_PLAY_POINTS) {
+        inputXex.value = MAX_PLAY_POINTS
+        rewardXex.value = new Intl.NumberFormat("en-US")
+            .format(MAX_PLAY_POINTS * (xdonAmount > 0 ? extraWinPointsMultiplier : winPointsMultiplier) / 100)
+        return false
+    } else {
+        rewardXex.value = new Intl.NumberFormat("en-US")
+            .format((inputValue + char) * (xdonAmount > 0 ? extraWinPointsMultiplier : winPointsMultiplier) / 100)
+    }
+}
+inputXex.onchange = function () {
+    let inputValue = inputXex.value;
+    if (inputValue < DEFAULT_PLAY_POINTS)  {
+        inputValue = DEFAULT_PLAY_POINTS
+    }
+    playPoints = inputValue
+    inputXex.value = new Intl.NumberFormat("en-US").format(inputValue)
 }

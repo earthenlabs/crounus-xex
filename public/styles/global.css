@@ -42,6 +42,9 @@ button {
 .h-12 {
     height: 3rem;
 }
+.h-8 {
+    height: 2rem;
+}
 .h-10 {
     height: 10vh;
 }
@@ -83,6 +86,9 @@ button {
 .w-1\/6 {
     width: 16.666667%;
 }
+.w-5\/6 {
+    width: 83.333333%;
+}
 .w-1\/4 {
     width: 25%;
 }
@@ -94,6 +100,9 @@ button {
 }
 .w-1\/12 {
     width: 8.333333%;
+}
+.w-3\/5 {
+    width: 60%;
 }
 
 .flex {

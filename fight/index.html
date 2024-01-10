@@ -73,11 +73,45 @@
 			</div>
 		</div>
 	</div>
+	<div id="input-xex-container" class="modal-input-container hidden">
+		<div class="modal-input">
+			<img src="/assets/background/input-xex-card.png" alt="input background"/>
+			<div class="modal-input-content-wrapper">
+				<div class="modal-input-content">
+					<div class="flex w-full justify-between items-center py-1">
+						<div class="w-1/3 input-label">Spend:</div>
+						<div class="w-3/5">
+							<div class="input-container">
+								<div class="input-icon-container">
+									<img src="/assets/icon/xex-logo.png" class="input-icon" alt="xex icon"/>
+								</div>
+								<input id="input-xex" class="input-field" value="12,500" />
+							</div>
+						</div>
+					</div>
+					<div class="flex w-full justify-between items-center py-1">
+						<div class="w-1/3 input-label">Reward:</div>
+						<div class="w-3/5">
+							<div class="input-container">
+								<div class="input-icon-container">
+									<img src="/assets/icon/xex-logo.png" class="input-icon" alt="xex icon"/>
+								</div>
+								<input id="reward-xex" readonly class="input-field" value="30,000"/>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="modal-input-footer">
+					<button id="back-button" class="btn-input h-8">Back</button>
+					<button id="confirm-fight-button" class="btn-input h-8">
+						<span id="confirm-fight-text">Confirm</span>
+						<span class="fight-loading"><span>&bull;</span><span>&bull;</span><span>&bull;</span></span>
+					</button>
+				</div>
+			</div>
+		</div>
+	</div>
 </div>
-<!--<script src="https://cdn.jsdelivr.net/npm/web3@latest/dist/web3.min.js"></script>-->
-<!--<script src="-->
-<!--https://cdn.jsdelivr.net/npm/web3-utils@4.1.0/lib/commonjs/index.min.js-->
-<!--"></script>-->
 <script
 		src="https://cdnjs.cloudflare.com/ajax/libs/web3/4.0.1-alpha.5/web3.min.js"
 		integrity="sha512-NfffVWpEqu1nq+658gzlJQilRBOvjs+PhEKSjT9gkQXRy9OfxI2TOXr33zS7MgGyTpBa5qtC6mKJkQGd9dN/rw=="
