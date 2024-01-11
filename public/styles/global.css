@@ -307,6 +307,10 @@ button {
     color: white;
 }
 
+.invisible {
+    visibility: hidden;
+}
+
 
 .btn-info {
     display: flex;

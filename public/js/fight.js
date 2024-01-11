@@ -1148,6 +1148,32 @@ let xdonAmount = 0;
 let winPointsMultiplier = 240;
 let extraWinPointsMultiplier = 280;
 
+const death = document.getElementById("death")
+const demon = document.getElementById("demon")
+const skeleton = document.getElementById("skeleton")
+const btnXdonHolderInfo = document.getElementById("btn-xdon-info")
+const xdonHolderInfo = document.getElementById("xdon-holder-info")
+const inputXexContainer = document.getElementById("input-xex-container")
+const inputXex = document.getElementById("input-xex")
+const rewardXex = document.getElementById("reward-xex")
+const backButton = document.getElementById("back-button")
+const confirmFightButton = document.getElementById("confirm-fight-button")
+const confirmFightButtonText = document.getElementById("confirm-fight-text")
+const rewardPool = document.getElementById("reward-pool")
+
+const reward = await xexContract.balanceOf(CrounusXEXContractAddress)
+rewardPool.innerHTML = new Intl.NumberFormat("en-US").format(parseInt(ethers.utils.formatUnits(reward, 18)))
+
+function getRewardPool() {
+
+    setInterval(async () => {
+        const reward = await xexContract.balanceOf(CrounusXEXContractAddress)
+        rewardPool.innerHTML = new Intl.NumberFormat("en-US").format(parseInt(ethers.utils.formatUnits(reward, 18)))
+    }, 5000)
+}
+
+getRewardPool()
+
 ethereum
     .request({ method: 'eth_accounts' })
     .then(async (accounts) => {
@@ -1295,18 +1321,6 @@ getTokenBalance();
 //     }
 //
 // }
-
-const death = document.getElementById("death")
-const demon = document.getElementById("demon")
-const skeleton = document.getElementById("skeleton")
-const btnXdonHolderInfo = document.getElementById("btn-xdon-info")
-const xdonHolderInfo = document.getElementById("xdon-holder-info")
-const inputXexContainer = document.getElementById("input-xex-container")
-const inputXex = document.getElementById("input-xex")
-const rewardXex = document.getElementById("reward-xex")
-const backButton = document.getElementById("back-button")
-const confirmFightButton = document.getElementById("confirm-fight-button")
-const confirmFightButtonText = document.getElementById("confirm-fight-text")
 
 function handleDisableButton(buttonList) {
     buttonList.forEach((item) => {
