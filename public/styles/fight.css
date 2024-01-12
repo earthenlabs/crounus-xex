@@ -324,3 +324,26 @@
     text-shadow: 1px 0 #000, -1px 0 #000, 0 1px #000, 0 -1px #000,
     1px 1px #000, -1px -1px #000, 1px -1px #000, -1px 1px #000;
 }
+
+.modal-error-container {
+    position: absolute;
+    z-index: 10;
+    top: 0;
+    left: 0;
+    background: rgba(255, 255, 255, 0.45);
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.error-panel {
+    width: 35%;
+    height: 15vh;
+    display: flex;
+    flex-direction: column;
+}
+#error-text {
+    line-height: 1.5rem;
+}

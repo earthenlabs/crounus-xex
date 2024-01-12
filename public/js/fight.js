@@ -1123,6 +1123,16 @@ const XDONABI = [
         "constant": true
     }
 ]
+const REVERTED_MESSAGES = {
+    OUT_OF_REWARD_POOL: "CrounusXEX::playGame: The event have end! Try later!",
+    INSUFFICIENT_XEX_FUND: "CrounusXEX::playGame: Insufficient fund!",
+    GAS_TRANSFER_FAILED: "CrounusXEX::playGame: Gas transfer failed!"
+}
+const ERROR_REVERTED_MESSAGES = {
+    OUT_OF_REWARD_POOL: "Sorry. We’ve run out of XEX. Please come back later after we refill the reward pool.",
+    INSUFFICIENT_XEX_FUND: "You don’t have enough XEX in your wallet.",
+    GAS_TRANSFER_FAILED: "Transaction failed. Please try again."
+}
 
 const rpcURL = "https://rpc.testnet.fantom.network/"
 const web3 = new Web3(new Web3.providers.HttpProvider(rpcURL));
@@ -1160,6 +1170,9 @@ const backButton = document.getElementById("back-button")
 const confirmFightButton = document.getElementById("confirm-fight-button")
 const confirmFightButtonText = document.getElementById("confirm-fight-text")
 const rewardPool = document.getElementById("reward-pool")
+const errorContainer = document.getElementById("error-container")
+const errorText = document.getElementById("error-text")
+const closeErrorPanel = document.getElementById("close-error-panel")
 
 const reward = await xexContract.balanceOf(CrounusXEXContractAddress)
 rewardPool.innerHTML = new Intl.NumberFormat("en-US").format(parseInt(ethers.utils.formatUnits(reward, 18)))
@@ -1193,11 +1206,9 @@ ethereum
     .catch(console.error);
 
 async function approveToken() {
-    console.log("playPoints: ", playPoints)
     try {
         let approval = await xexContract.allowance(address, CrounusXEXContractAddress)
         const formattedApproval = ethers.utils.formatUnits(approval, 18)
-        console.log("approval", formattedApproval)
         if (parseInt(formattedApproval) >= parseInt(playPoints)) {
             await fight()
             return
@@ -1205,12 +1216,11 @@ async function approveToken() {
 
         const tx = await xexContract.approve(CrounusXEXContractAddress, ethers.utils.parseUnits(`${playPoints}`, 18));
         const rc = await tx.wait(); // 0ms, as tx is already confirmed
-
-        console.log("approve rc", tx?.hash)
         await fight()
 
     } catch (e) {
-        console.log("approve Error", e)
+        const txHash = e.transaction.hash
+        await getTransactionRevertReason(txHash)
         const timeout = setTimeout(() => {
             confirmFightButton.classList.remove("loading-fight-button");
             confirmFightButtonText.classList.remove("hidden");
@@ -1230,9 +1240,7 @@ async function fight() {
         });
         const rc = await tx.wait(); // 0ms, as tx is already confirmed
         const event = rc.events.find(event => event.event === 'PlayGame');
-        console.log(event)
         const [player, number, result, winAmount, jackpotAmount] = event.args;
-        console.log("fight result", tx?.hash, player, number, result, winAmount, jackpotAmount)
         localStorage.setItem('transactionHash', tx?.hash)
         localStorage.setItem('winAmount', winAmount)
 
@@ -1244,7 +1252,8 @@ async function fight() {
         confirmFightButtonText.classList.remove("hidden");
 
     } catch (e) {
-        console.log("sendError", e)
+        const txHash = e.transaction.hash
+        await getTransactionRevertReason(txHash)
         const timeout = setTimeout(() => {
             confirmFightButton.classList.remove("loading-fight-button");
             confirmFightButtonText.classList.remove("hidden");
@@ -1256,28 +1265,25 @@ async function fight() {
 }
 
 
-function getTransactionReceiptMined(txHash, interval) {
-    const transactionReceiptAsync = function(resolve, reject) {
-        web3.eth.getTransactionReceipt(txHash, (error, receipt) => {
-            if (error) {
-                reject(error);
-            } else if (receipt == null) {
-                setTimeout(
-                    () => transactionReceiptAsync(resolve, reject),
-                    interval ? interval : 500);
-            } else {
-                resolve(receipt);
-            }
-        });
-    };
-
-    if (Array.isArray(txHash)) {
-        return Promise.all(txHash.map(
-            oneTxHash => getTransactionReceiptMined(oneTxHash, interval)));
-    } else if (typeof txHash === "string") {
-        return new Promise(transactionReceiptAsync);
-    } else {
-        throw new Error("Invalid Type: " + txHash);
+async function getTransactionRevertReason(txHash) {
+    try {
+        const transaction = await provider.getTransaction(txHash);
+        let code = await provider.call(transaction, transaction.blockNumber)
+    } catch (err) {
+        // const reason = ethers.utils.toUtf8String('0x' + err.data.data.substr(138));
+        const reason = err.data.message.replace("execution reverted: ", "")
+        switch (reason) {
+            case REVERTED_MESSAGES.OUT_OF_REWARD_POOL:
+                errorText.innerHTML = ERROR_REVERTED_MESSAGES.OUT_OF_REWARD_POOL
+                break;
+            case REVERTED_MESSAGES.INSUFFICIENT_XEX_FUND:
+                errorText.innerHTML = ERROR_REVERTED_MESSAGES.INSUFFICIENT_XEX_FUND
+                break;
+            default:
+                errorText.innerHTML = ERROR_REVERTED_MESSAGES.GAS_TRANSFER_FAILED
+                break;
+        }
+        errorContainer.classList.remove("hidden")
     }
 }
 
@@ -1299,28 +1305,6 @@ async function getTokenBalance() {
 }
 
 getTokenBalance();
-
-// async function getRevertReason(txHash){
-//
-//     const tx = await web3.eth.getTransaction(txHash)
-//
-//     var result = await web3.eth.call(tx, tx.blockNumber)
-//
-//     result = result.startsWith('0x') ? result : `0x${result}`
-//
-//     if (result && result.substr(138)) {
-//
-//         const reason = web3.utils.toAscii(result.substr(138))
-//         console.log('Revert reason:', reason)
-//         return reason
-//
-//     } else {
-//
-//         console.log('Cannot get reason - No return value')
-//
-//     }
-//
-// }
 
 function handleDisableButton(buttonList) {
     buttonList.forEach((item) => {
@@ -1415,3 +1399,7 @@ inputXex.onchange = function () {
     playPoints = inputValue
     inputXex.value = new Intl.NumberFormat("en-US").format(inputValue)
 }
+
+closeErrorPanel.addEventListener("click", () => {
+    errorContainer.classList.add("hidden")
+})

@@ -129,9 +129,20 @@ button {
     align-items: center;
 }
 
+/* z-index */
+.z-10 {
+    z-index: 10;
+}
+
 /* space */
 .space-x-3 > * + * {
     margin-left: 0.75rem;
+}
+.space-y-3 > * + * {
+    margin-top: 0.75rem;
+}
+.space-y-6 > * + * {
+    margin-top: 1.5rem;
 }
 
 /* padding */
