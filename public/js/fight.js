@@ -1173,6 +1173,7 @@ const rewardPool = document.getElementById("reward-pool")
 const errorContainer = document.getElementById("error-container")
 const errorText = document.getElementById("error-text")
 const closeErrorPanel = document.getElementById("close-error-panel")
+const confettiModal = document.getElementById("confetti")
 
 const reward = await xexContract.balanceOf(CrounusXEXContractAddress)
 rewardPool.innerHTML = new Intl.NumberFormat("en-US").format(parseInt(ethers.utils.formatUnits(reward, 18)))
@@ -1241,15 +1242,28 @@ async function fight() {
         const rc = await tx.wait(); // 0ms, as tx is already confirmed
         const event = rc.events.find(event => event.event === 'PlayGame');
         const [player, number, result, winAmount, jackpotAmount] = event.args;
+        const winAmountInt = parseInt(winAmount)
+        const jackpotAmountInt = parseInt(jackpotAmount)
         localStorage.setItem('transactionHash', tx?.hash)
-        localStorage.setItem('winAmount', winAmount)
+        localStorage.setItem('winAmount', winAmountInt)
 
         localStorage.setItem("isWin", result)
-        localStorage.setItem("isWinJackpot", jackpotAmount > 0)
+        localStorage.setItem("isWinJackpot", jackpotAmountInt > 0)
 
-        window.location.replace("/game/index.html");
-        confirmFightButton.classList.remove("loading-fight-button");
-        confirmFightButtonText.classList.remove("hidden");
+        if (jackpotAmountInt > 0) {
+            confettiModal.classList.remove("hidden")
+            setTimeout(() => {
+                window.location.replace("/game/index.html");
+                confirmFightButton.classList.remove("loading-fight-button");
+                confirmFightButtonText.classList.remove("hidden");
+            }, 1800)
+        } else {
+            window.location.replace("/game/index.html");
+            confirmFightButton.classList.remove("loading-fight-button");
+            confirmFightButtonText.classList.remove("hidden");
+        }
+
+
 
     } catch (e) {
         const txHash = e.transaction.hash
