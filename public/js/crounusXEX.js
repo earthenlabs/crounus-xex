@@ -654,6 +654,9 @@ const mainMenu = document.getElementById('main-menu')
 const xdonHolder = document.getElementById('xdon-holder')
 const btnXdonHolderInfo = document.getElementById("btn-xdon-info")
 const xdonHolderInfo = document.getElementById("xdon-holder-info")
+const toggleSound = document.getElementById("toggle-sound")
+const audioPlayer = document.getElementById("audio-player")
+let isSoundOn = false
 
 let xdonAmount = 0
 
@@ -672,6 +675,21 @@ ethereum
 start.addEventListener('click', () => {
     localStorage.setItem('startGame', '1')
     ethereum.request({ method: 'eth_accounts' }).then(handleAccountsChanged).catch(console.error);
+})
+
+toggleSound.addEventListener('click', () => {
+    if (isSoundOn) {
+        audioPlayer.muted = true
+        isSoundOn = false
+        toggleSound.innerHTML = `<img src="/assets/icon/sound-off.svg" alt="kebab icon" class="w-6 h-6">`
+        localStorage.setItem('soundOn', 'false')
+        return
+    }
+    audioPlayer.muted = false
+    audioPlayer.play()
+    isSoundOn = true
+    toggleSound.innerHTML = `<img src="/assets/icon/sound.svg" alt="kebab icon" class="w-6 h-6">`
+    localStorage.setItem('soundOn', 'true')
 })
 
 btnXdonHolderInfo.onmouseover = function () {

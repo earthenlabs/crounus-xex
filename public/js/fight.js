@@ -1175,18 +1175,16 @@ const errorText = document.getElementById("error-text")
 const closeErrorPanel = document.getElementById("close-error-panel")
 const confettiModal = document.getElementById("confetti")
 
+const toggleSound = document.getElementById("toggle-sound")
+const audioPlayer = document.getElementById("audio-player")
+let isSoundOn = false
+
 const reward = await xexContract.balanceOf(CrounusXEXContractAddress)
 rewardPool.innerHTML = new Intl.NumberFormat("en-US").format(parseInt(ethers.utils.formatUnits(reward, 18)))
 
-function getRewardPool() {
-
-    setInterval(async () => {
-        const reward = await xexContract.balanceOf(CrounusXEXContractAddress)
-        rewardPool.innerHTML = new Intl.NumberFormat("en-US").format(parseInt(ethers.utils.formatUnits(reward, 18)))
-    }, 5000)
-}
-
 getRewardPool()
+getTokenBalance();
+checkSoundOn()
 
 ethereum
     .request({ method: 'eth_accounts' })
@@ -1278,7 +1276,6 @@ async function fight() {
     }
 }
 
-
 async function getTransactionRevertReason(txHash) {
     try {
         const transaction = await provider.getTransaction(txHash);
@@ -1318,8 +1315,6 @@ async function getTokenBalance() {
     }
 }
 
-getTokenBalance();
-
 function handleDisableButton(buttonList) {
     buttonList.forEach((item) => {
         item.classList.remove("btn-fight")
@@ -1340,6 +1335,31 @@ function calculateReward() {
     inputXexContainer.classList.remove("hidden")
     rewardXex.value = new Intl.NumberFormat("en-US")
         .format(DEFAULT_PLAY_POINTS * (xdonAmount > 0 ? extraWinPointsMultiplier : winPointsMultiplier) / 100)
+}
+
+function getRewardPool() {
+
+    setInterval(async () => {
+        const reward = await xexContract.balanceOf(CrounusXEXContractAddress)
+        rewardPool.innerHTML = new Intl.NumberFormat("en-US").format(parseInt(ethers.utils.formatUnits(reward, 18)))
+    }, 5000)
+}
+
+function checkSoundOn() {
+    let soundOn = localStorage.getItem('soundOn')
+    if (soundOn === 'true') {
+        audioPlayer.muted = false
+        audioPlayer.play()
+        isSoundOn = true
+        toggleSound.innerHTML = `<img src="/assets/icon/sound.svg" alt="kebab icon" class="w-6 h-6">`
+        localStorage.setItem('soundOn', 'true')
+        return
+    }
+
+    audioPlayer.muted = true
+    isSoundOn = false
+    toggleSound.innerHTML = `<img src="/assets/icon/sound-off.svg" alt="kebab icon" class="w-6 h-6">`
+    localStorage.setItem('soundOn', 'false')
 }
 
 backButton.addEventListener("click", () => {
@@ -1419,3 +1439,20 @@ inputXex.onchange = function () {
 closeErrorPanel.addEventListener("click", () => {
     errorContainer.classList.add("hidden")
 })
+
+toggleSound.addEventListener('click', () => {
+    if (isSoundOn) {
+        audioPlayer.muted = true
+        isSoundOn = false
+        toggleSound.innerHTML = `<img src="/assets/icon/sound-off.svg" alt="kebab icon" class="w-6 h-6">`
+        localStorage.setItem('soundOn', 'false')
+        return
+    }
+    audioPlayer.muted = false
+    audioPlayer.play()
+    isSoundOn = true
+    toggleSound.innerHTML = `<img src="/assets/icon/sound.svg" alt="kebab icon" class="w-6 h-6">`
+    localStorage.setItem('soundOn', 'true')
+})
+
+

@@ -83,6 +83,11 @@
 						<img src="/assets/icon/home.svg" alt="kebab icon" class="w-6 h-6">
 					</a>
 				</div>
+				<div class="p-4">
+					<button id="toggle-sound" type="button" class="eightbit-btn btn-secondary">
+						<img src="/assets/icon/sound-off.svg" alt="kebab icon" class="w-6 h-6">
+					</button>
+				</div>
 			</div>
 			<div class="w-1/3">
 				<div class="p-4 flex justify-end items-center text">
@@ -149,7 +154,7 @@
 		<dotlottie-player src="https://lottie.host/e2152f74-0dd5-48b1-8327-1e7ea313950a/SyPTkoK7sn.json" background="transparent" speed="1" style="width: 100%; height: 100%;" loop autoplay></dotlottie-player>
 	</div>
 
-	<audio autoplay loop>
+	<audio autoplay loop id="audio-player">
 		<source src="/assets/audio/forest-walk.mp3" type="audio/mpeg">
 		Your browser does not support the audio element.
 	</audio>

@@ -69,8 +69,8 @@
 					</button>
 				</div>
 				<div class="p-4">
-					<button type="button" class="eightbit-btn btn-secondary">
-						<img src="/assets/icon/sound.svg" alt="kebab icon" class="w-6 h-6">
+					<button id="toggle-sound" type="button" class="eightbit-btn btn-secondary">
+						<img src="/assets/icon/sound-off.svg" alt="kebab icon" class="w-6 h-6">
 					</button>
 				</div>
 			</div>
@@ -81,7 +81,7 @@
 			</div>
 		</div>
 	</div>
-	<audio autoplay loop>
+	<audio controls autoplay loop id="audio-player">
 		<source src="/assets/audio/forest-walk.mp3" type="audio/mpeg">
 		Your browser does not support the audio element.
 	</audio>
