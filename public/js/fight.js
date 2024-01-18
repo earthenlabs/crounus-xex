@@ -1412,6 +1412,8 @@ inputXex.onchange = function () {
     }
     playPoints = inputValue
     inputXex.value = new Intl.NumberFormat("en-US").format(inputValue)
+    rewardXex.value = new Intl.NumberFormat("en-US")
+        .format((inputValue) * (xdonAmount > 0 ? extraWinPointsMultiplier : winPointsMultiplier) / 100)
 }
 
 closeErrorPanel.addEventListener("click", () => {

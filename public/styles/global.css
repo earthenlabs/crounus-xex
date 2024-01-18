@@ -104,6 +104,9 @@ button {
 .w-3\/5 {
     width: 60%;
 }
+.w-2\/5 {
+    width: 40%;
+}
 
 .flex {
     display: flex;

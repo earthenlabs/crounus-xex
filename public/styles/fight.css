@@ -148,6 +148,20 @@
 
 .modal-input {
     position: relative;
+    width: 32%;
+}
+
+.modal-input-background {
+    width: 100%;
+}
+
+.modal-input-noted {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    color: #CD6304;
+    font-size: 0.7rem;
 }
 
 .modal-input-content-wrapper {
