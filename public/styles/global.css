@@ -21,6 +21,7 @@ button {
 }
 
 #app {
+    background-color: #1E1E1E;
     margin: auto;
     width: 1280px;
 }
