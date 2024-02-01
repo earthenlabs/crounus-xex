@@ -1,5 +1,6 @@
 const XEXContractAddress = "0xa41A879bcFdd75983a987FD6b68fae37777e8b28"
 const XDONContractAddress = "0x6ef08f3f88aa089a392fa2460543262a93d43637"
+const BASE_API_URL = "https://crounus-xex-ranking.vercel.app"
 
 const IERC20ABI = [
     {
@@ -660,6 +661,10 @@ let isSoundOn = false
 const disconnectButton = document.getElementById("disconnect-button")
 const disconnectContainer = document.getElementById("disconnect-container")
 const disconnectBackButton = document.getElementById("disconnect-back-button")
+const rankingButton = document.getElementById("ranking-button")
+const rankingCloseButton = document.getElementById("ranking-close-button")
+const rankingContainer = document.getElementById("ranking-container")
+const rankingContent = document.getElementById("ranking-content")
 
 let xdonAmount = 0
 
@@ -721,6 +726,30 @@ disconnectButton.addEventListener("click", () => {
     walletID.innerHTML = 'Not Connected'
     disconnectContainer.classList.add('hidden');
     localStorage.setItem('disconnect', '1');
+})
+
+rankingButton.addEventListener("click", async () => {
+    let row = ''
+    try {
+        const url = `${BASE_API_URL}/api/ranking`
+        const res = await fetch(url);
+        const data = await res.json()
+
+        const result = Array(...data.result)
+
+        result.forEach(function (datum, index) {
+            row += `<div class="user-ranking"><div class="user-no">${index + 1}</div><div class="user-address">${datum.user}</div><div class="user-point">${datum.point}</div></div>`
+        })
+    } catch (e) {
+        console.log(e)
+        row = ''
+    }
+
+    rankingContent.innerHTML = row
+    rankingContainer.classList.remove('hidden')
+})
+rankingCloseButton.addEventListener("click", () => {
+    rankingContainer.classList.add('hidden')
 })
 
 function handleAccountsChanged(accounts) {

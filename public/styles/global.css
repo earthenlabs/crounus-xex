@@ -524,3 +524,39 @@ button {
 .btn-input:active {
     box-shadow: inset 4px 4px 0 0 #CD6304;
 }
+
+.ranking-panel {
+    width: 45%;
+    height: 55vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 1rem;
+}
+.ranking-header {
+    height: 10%;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    font-size: 1rem;
+    padding: 0.5rem;
+}
+.user-no {
+    width: 10%;
+}
+.user-address {
+    width: 70%;
+}
+.user-point {
+    width: 20%;
+}
+.user-ranking {
+    height: 9%;
+    width: 100%;
+    display: flex;
+    align-items: center;
+}
+#ranking-content {
+    height: 90%;
+    padding: 0.5rem;
+}

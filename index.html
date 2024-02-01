@@ -43,7 +43,7 @@
 				<div class="btn-menu-wrapper">
 					<a type="button" id="start-btn" class="btn-menu">Start</a>
 					<a type="button" class="btn-menu" href="https://crounus-xex.gitbook.io/crounus-xex/" target="_blank">Guide</a >
-					<a type="button" class="btn-menu">Ranking</a>
+					<a type="button" id="ranking-button" class="btn-menu">Ranking</a>
 				</div>
 			</div>
 		</div>
@@ -72,6 +72,24 @@
 				<button id="disconnect-button" class="btn-input h-8">
 					Confirm
 				</button>
+			</div>
+		</div>
+	</div>
+
+	<div id="ranking-container" class="modal-error-container">
+		<div class="pool-info ranking-panel space-y-6">
+			<div class="w-full h-full flex flex-column">
+				<div class="ranking-header">
+					<div class="user-no">No.</div>
+					<div class="user-address">User</div>
+					<div class="user-point">Point</div>
+				</div>
+				<div id="ranking-content">
+					
+				</div>
+			</div>
+			<div class="w-full z-10">
+				<button id="ranking-close-button" class="btn-input h-8">Close</button>
 			</div>
 		</div>
 	</div>
