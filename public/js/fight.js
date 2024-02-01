@@ -1,6 +1,6 @@
-const CrounusXEXContractAddress = "0xeDE739Db796FB9C837546654D3782aCcF2628886"
-const XEXContractAddress = "0xed8d4140f09ddcD0B62022193b9A2DdA158064a8"
-const XDONContractAddress = "0x20217df76D9b92be72F7D9343374Bb05235c96F7"
+const CrounusXEXContractAddress = "0x9611Accf307788D5361bd3261e81c9b111C1cf3B"
+const XEXContractAddress = "0xa41A879bcFdd75983a987FD6b68fae37777e8b28"
+const XDONContractAddress = "0x6ef08f3f88aa089a392fa2460543262a93d43637"
 
 const IERC20ABI = [
     {
@@ -1134,7 +1134,7 @@ const ERROR_REVERTED_MESSAGES = {
     GAS_TRANSFER_FAILED: "Transaction failed. Please try again."
 }
 
-const rpcURL = "https://rpc.testnet.fantom.network/"
+const rpcURL = "https://rpc.ankr.com/fantom/"
 const web3 = new Web3(new Web3.providers.HttpProvider(rpcURL));
 
 const DEFAULT_PLAY_POINTS = 12500
@@ -1174,6 +1174,10 @@ const errorContainer = document.getElementById("error-container")
 const errorText = document.getElementById("error-text")
 const closeErrorPanel = document.getElementById("close-error-panel")
 const confettiModal = document.getElementById("confetti")
+const disconnectButton = document.getElementById("disconnect-button")
+const disconnectContainer = document.getElementById("disconnect-container")
+const disconnectBackButton = document.getElementById("disconnect-back-button")
+const isDisconnect = localStorage.getItem('disconnect')
 
 const toggleSound = document.getElementById("toggle-sound")
 const audioPlayer = document.getElementById("audio-player")
@@ -1183,8 +1187,10 @@ const reward = await xexContract.balanceOf(CrounusXEXContractAddress)
 rewardPool.innerHTML = new Intl.NumberFormat("en-US").format(parseInt(ethers.utils.formatUnits(reward, 18)))
 
 getRewardPool()
-getTokenBalance();
+getTokenBalance()
 checkSoundOn()
+
+if (isDisconnect === '1') window.location.replace('/index.html')
 
 ethereum
     .request({ method: 'eth_accounts' })
@@ -1406,6 +1412,10 @@ btnXdonHolderInfo.onmouseout = function () {
     }
     // xdonHolderInfo.classList.remove("animate__animated animate__fadeInRight")
 }
+btnXdonHolderInfo.addEventListener('click', () => {
+    const isDisconnect = localStorage.getItem('disconnect')
+    if (isDisconnect === '0') disconnectContainer.classList.remove('hidden')
+})
 
 inputXex.onkeypress = function (event) {
     const char = event.key
@@ -1455,4 +1465,12 @@ toggleSound.addEventListener('click', () => {
     localStorage.setItem('soundOn', 'true')
 })
 
-
+disconnectBackButton.addEventListener("click", () => {
+    disconnectContainer.classList.add("hidden")
+})
+disconnectButton.addEventListener("click", () => {
+    walletID.innerHTML = 'Not Connected'
+    disconnectContainer.classList.add('hidden');
+    localStorage.setItem('disconnect', '1');
+    window.location.replace("/index.html");
+})

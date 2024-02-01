@@ -1,5 +1,5 @@
-const XEXContractAddress = "0xed8d4140f09ddcD0B62022193b9A2DdA158064a8"
-const XDONContractAddress = "0x20217df76D9b92be72F7D9343374Bb05235c96F7"
+const XEXContractAddress = "0xa41A879bcFdd75983a987FD6b68fae37777e8b28"
+const XDONContractAddress = "0x6ef08f3f88aa089a392fa2460543262a93d43637"
 
 const IERC20ABI = [
     {
@@ -640,7 +640,7 @@ const XDONABI = [
     }
 ]
 
-const rpcURL = "https://rpc.testnet.fantom.network/"
+const rpcURL = "https://rpc.ankr.com/fantom/"
 const web3 = new Web3(new Web3.providers.HttpProvider(rpcURL))
 
 const xexContract = new web3.eth.Contract(IERC20ABI, XEXContractAddress)
@@ -657,12 +657,17 @@ const xdonHolderInfo = document.getElementById("xdon-holder-info")
 const toggleSound = document.getElementById("toggle-sound")
 const audioPlayer = document.getElementById("audio-player")
 let isSoundOn = false
+const disconnectButton = document.getElementById("disconnect-button")
+const disconnectContainer = document.getElementById("disconnect-container")
+const disconnectBackButton = document.getElementById("disconnect-back-button")
 
 let xdonAmount = 0
 
 ethereum
     .request({ method: 'eth_accounts' })
     .then(async (accounts) => {
+        const isDisconnect = localStorage.getItem('disconnect')
+        if (isDisconnect === '1') return
         if (accounts.length !== 0) {
             let account = accounts[0]
             xdonAmount = await xdonContract.methods.balanceOf(account).call();
@@ -704,9 +709,23 @@ btnXdonHolderInfo.onmouseout = function () {
     }
     // xdonHolderInfo.classList.remove("animate__animated animate__fadeInRight")
 }
+btnXdonHolderInfo.addEventListener('click', () => {
+    const isDisconnect = localStorage.getItem('disconnect')
+    if (isDisconnect === '0') disconnectContainer.classList.remove('hidden')
+})
+
+disconnectBackButton.addEventListener("click", () => {
+    disconnectContainer.classList.add("hidden")
+})
+disconnectButton.addEventListener("click", () => {
+    walletID.innerHTML = 'Not Connected'
+    disconnectContainer.classList.add('hidden');
+    localStorage.setItem('disconnect', '1');
+})
 
 function handleAccountsChanged(accounts) {
-    if (accounts.length === 0) {
+    const isDisconnect = localStorage.getItem('disconnect')
+    if (accounts.length === 0 || isDisconnect === '1') {
         mainMenu.classList.add("hidden");
         connectModal.classList.remove("hidden");
         return;

@@ -37,74 +37,73 @@ const isMobile = () => {
     return check;
 };
 
-connectButton.addEventListener("click", async () => {
-    if (typeof window.ethereum !== "undefined") {
-        startLoading();
+if (connectButton) {
+    connectButton.addEventListener("click", async () => {
+        if (typeof window.ethereum !== "undefined") {
+            startLoading();
 
-       try {
-           await ethereum.request({
-               method: 'wallet_switchEthereumChain',
-               params: [{ chainId: '0xfa2' }],
-           })
-       } catch (switchError) {
-           // This error code indicates that the chain has not been added to MetaMask.
-           if (switchError.code === 4902) {
-               try {
-                   await ethereum.request({
-                       method: 'wallet_addEthereumChain',
-                       params: [
-                           {
-                               chainId: '0xfa2',
-                               chainName: 'Fantom Testnet',
-                               rpcUrls: ['https://rpc.testnet.fantom.network/'],
-                           },
-                       ],
-                   })
-               } catch (addError) {
-                   console.log(addError, addError.code);
-                   connectResult.classList.remove('hidden');
-                   connectResult.innerHTML = `<div class="pb-3">Failed</div><div>Please retry</div>`
-                   stopLoading();
-               }
-           } else {
-               // handle other "switch" errors
-               console.log(switchError, switchError.code);
-               connectResult.classList.remove('hidden');
-               connectResult.innerHTML = `<div class="pb-3">Failed</div><div>Please retry</div>`
-               stopLoading();
-           }
-        }
+            try {
+                await ethereum.request({
+                    method: 'wallet_switchEthereumChain',
+                    params: [{ chainId: '0xfa' }],
+                })
+            } catch (switchError) {
+                // This error code indicates that the chain has not been added to MetaMask.
+                if (switchError.code === 4902) {
+                    try {
+                        await ethereum.request({
+                            method: 'wallet_addEthereumChain',
+                            params: [
+                                {
+                                    chainId: '0xfa',
+                                    chainName: 'Fantom Testnet',
+                                    rpcUrls: ['https://rpc.ankr.com/fantom/'],
+                                },
+                            ],
+                        })
+                    } catch (addError) {
+                        console.log(addError, addError.code);
+                        connectResult.classList.remove('hidden');
+                        connectResult.innerHTML = `<div class="pb-3">Failed</div><div>Please retry</div>`
+                        stopLoading();
+                    }
+                } else {
+                    // handle other "switch" errors
+                    console.log(switchError, switchError.code);
+                    connectResult.classList.remove('hidden');
+                    connectResult.innerHTML = `<div class="pb-3">Failed</div><div>Please retry</div>`
+                    stopLoading();
+                }
+            }
 
-        try {
-            const accounts = await ethereum.request({ method: "eth_requestAccounts" })
-            const account = accounts[0];
+            try {
+                const accounts = await ethereum.request({ method: "eth_requestAccounts" })
+                const account = accounts[0];
 
-            walletID.innerHTML = `<span>${account.substr(0, 5)}...${account.substr(account.length - 4)}</span>`;
-            connectButton.classList.add('hidden');
-            connectResult.classList.remove('hidden');
-            connectResult.innerHTML = 'Successful'
-            const timeout = setTimeout(() => {
-                window.location.replace('/game/index.html')
-                clearTimeout(timeout);
-            }, 1500)
+                walletID.innerHTML = `<span>${account.substr(0, 5)}...${account.substr(account.length - 4)}</span>`;
+                connectButton.classList.add('hidden');
+                connectResult.classList.remove('hidden');
+                connectResult.innerHTML = 'Successful'
+                localStorage.setItem('disconnect', '0')
+                const timeout = setTimeout(() => {
+                    window.location.replace('/game/index.html')
+                    clearTimeout(timeout);
+                }, 1500)
 
-            stopLoading();
-        } catch (error) {
-            console.log(error, error.code);
-            connectResult.classList.remove('hidden');
-            connectResult.innerHTML = `<div class="pb-3">Failed</div><div>Please retry</div>`
-            stopLoading();
-        }
-    } else {
-        if (isMobile()) {
-            mobileDeviceWarning.classList.add("show");
+                stopLoading();
+            } catch (error) {
+                console.log(error, error.code);
+                connectResult.classList.remove('hidden');
+                connectResult.innerHTML = `<div class="pb-3">Failed</div><div>Please retry</div>`
+                stopLoading();
+            }
         } else {
-            window.open("https://metamask.io/download/", "_blank");
-            installAlert.classList.add("show");
+            if (isMobile()) {
+                mobileDeviceWarning.classList.add("show");
+            } else {
+                window.open("https://metamask.io/download/", "_blank");
+                installAlert.classList.add("show");
+            }
         }
-    }
-});
-
-// reloadButton.addEventListener("click", () => {
-//     window.location.reload();
-// });
+    });
+}
