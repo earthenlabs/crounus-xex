@@ -365,6 +365,20 @@ const CrounusXEXABI = [
     },
     {
         "inputs": [],
+        "name": "MIN_PLAY_ROUNDS",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function",
+        "constant": true
+    },
+    {
+        "inputs": [],
         "name": "WIN_POINTS_RANGE",
         "outputs": [
             {
@@ -480,6 +494,26 @@ const CrounusXEXABI = [
         "outputs": [],
         "stateMutability": "nonpayable",
         "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "",
+                "type": "address"
+            }
+        ],
+        "name": "userPoints",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function",
+        "constant": true
     },
     {
         "inputs": [],
@@ -668,6 +702,32 @@ const CrounusXEXABI = [
         "stateMutability": "payable",
         "type": "function",
         "payable": true
+    },
+    {
+        "inputs": [],
+        "name": "getUsersPlayedPoint",
+        "outputs": [
+            {
+                "components": [
+                    {
+                        "internalType": "address",
+                        "name": "user",
+                        "type": "address"
+                    },
+                    {
+                        "internalType": "uint256",
+                        "name": "point",
+                        "type": "uint256"
+                    }
+                ],
+                "internalType": "struct CrounusXEX.UserPoint[]",
+                "name": "",
+                "type": "tuple[]"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function",
+        "constant": true
     }
 ]
 const XDONABI = [
@@ -1414,7 +1474,7 @@ btnXdonHolderInfo.onmouseout = function () {
 }
 btnXdonHolderInfo.addEventListener('click', () => {
     const isDisconnect = localStorage.getItem('disconnect')
-    if (isDisconnect === '0') disconnectContainer.classList.remove('hidden')
+    if (!isDisconnect || isDisconnect === '0') disconnectContainer.classList.remove('hidden')
 })
 
 inputXex.onkeypress = function (event) {
