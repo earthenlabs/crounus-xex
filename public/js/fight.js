@@ -1194,6 +1194,44 @@ const ERROR_REVERTED_MESSAGES = {
     GAS_TRANSFER_FAILED: "Transaction failed. Please try again."
 }
 
+const isDisconnect = localStorage.getItem('disconnect')
+
+if (isDisconnect === '1') window.location.replace('/index.html')
+
+ethereum.request({
+    method: 'wallet_switchEthereumChain',
+    params: [{chainId: '0xfa'}],
+}).then(() => {
+    console.log("----------------SWITCH NETWORK-------------------")
+    console.log("----------------CHAIN ID 0xfa--------------------")
+}).catch((switchError) => {
+    // This error code indicates that the chain has not been added to MetaMask.
+    if (switchError.code === 4902) {
+
+        ethereum
+            .request({
+                method: 'wallet_addEthereumChain',
+                params: [
+                    {
+                        chainId: '0xfa',
+                        chainName: 'Fantom Testnet',
+                        rpcUrls: ['https://rpc.ankr.com/fantom/'],
+                    },
+                ],
+            })
+            .then(() => {
+                console.log("----------------ADD NETWORK-------------------")
+                console.log("----------------CHAIN ID 0xfa-----------------")
+            })
+            .catch((addError) => {
+                console.log(addError, addError.code);
+            })
+    } else {
+        // handle other "switch" errors
+        console.log(switchError, switchError.code);
+    }
+})
+
 const rpcURL = "https://rpc.ankr.com/fantom/"
 const web3 = new Web3(new Web3.providers.HttpProvider(rpcURL));
 
@@ -1205,7 +1243,7 @@ let currentDisableButtons = []
 const xexBalanceBlock = document.getElementById('xex-balance')
 const xdonHolder = document.getElementById('xdon-holder')
 
-const provider = new ethers.providers.Web3Provider(window.ethereum)
+const provider = new ethers.providers.Web3Provider(window.ethereum, 'any')
 await provider.send("eth_requestAccounts", [])
 const signer = provider.getSigner()
 const address = await signer.getAddress()
@@ -1237,7 +1275,6 @@ const confettiModal = document.getElementById("confetti")
 const disconnectButton = document.getElementById("disconnect-button")
 const disconnectContainer = document.getElementById("disconnect-container")
 const disconnectBackButton = document.getElementById("disconnect-back-button")
-const isDisconnect = localStorage.getItem('disconnect')
 
 const toggleSound = document.getElementById("toggle-sound")
 const audioPlayer = document.getElementById("audio-player")
@@ -1249,8 +1286,6 @@ rewardPool.innerHTML = new Intl.NumberFormat("en-US").format(parseInt(ethers.uti
 getRewardPool()
 getTokenBalance()
 checkSoundOn()
-
-if (isDisconnect === '1') window.location.replace('/index.html')
 
 ethereum
     .request({ method: 'eth_accounts' })

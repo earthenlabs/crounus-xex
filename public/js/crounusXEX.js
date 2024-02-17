@@ -641,6 +641,39 @@ const XDONABI = [
     }
 ]
 
+ethereum.request({
+    method: 'wallet_switchEthereumChain',
+    params: [{chainId: '0xfa'}],
+}).then(() => {
+    console.log("----------------SWITCH NETWORK-------------------")
+    console.log("----------------CHAIN ID 0xfa--------------------")
+}).catch((switchError) => {
+    // This error code indicates that the chain has not been added to MetaMask.
+    if (switchError.code === 4902) {
+        ethereum
+            .request({
+                method: 'wallet_addEthereumChain',
+                params: [
+                    {
+                        chainId: '0xfa',
+                        chainName: 'Fantom Testnet',
+                        rpcUrls: ['https://rpc.ankr.com/fantom/'],
+                    },
+                ],
+            })
+            .then(() => {
+                console.log("----------------ADD NETWORK-------------------")
+                console.log("----------------CHAIN ID 0xfa-----------------")
+            })
+            .catch((addError) => {
+                console.log(addError, addError.code);
+            })
+    } else {
+        // handle other "switch" errors
+        console.log(switchError, switchError.code);
+    }
+})
+
 const rpcURL = "https://rpc.ankr.com/fantom/"
 const web3 = new Web3(new Web3.providers.HttpProvider(rpcURL))
 
@@ -669,7 +702,7 @@ const rankingContent = document.getElementById("ranking-content")
 let xdonAmount = 0
 
 ethereum
-    .request({ method: 'eth_accounts' })
+    .request({method: 'eth_accounts'})
     .then(async (accounts) => {
         const isDisconnect = localStorage.getItem('disconnect')
         if (isDisconnect === '1') return
@@ -684,7 +717,7 @@ ethereum
 
 start.addEventListener('click', () => {
     localStorage.setItem('startGame', '1')
-    ethereum.request({ method: 'eth_accounts' }).then(handleAccountsChanged).catch(console.error);
+    ethereum.request({method: 'eth_accounts'}).then(handleAccountsChanged).catch(console.error);
 })
 
 toggleSound.addEventListener('click', () => {
@@ -768,19 +801,19 @@ function handleAccountsChanged(accounts) {
 }
 
 async function getTokenBalance() {
-   try {
-       const accounts = await ethereum.request({ method: 'eth_requestAccounts' });
-       if (accounts[0] !== currentAccount) {
-           currentAccount = accounts[0];
-           localStorage.setItem('sserdda', currentAccount)
-       }
-       let result = await xexContract.methods.balanceOf(currentAccount).call();
-       // Convert the value from Wei to Ether
-       const formattedResult = web3.utils.fromWei(result, "ether");
-       xexBalanceBlock.innerHTML = new Intl.NumberFormat("en-US").format(formattedResult)
-   } catch (error) {
-       console.log("getTokenBalanceError", error)
-   }
+    try {
+        const accounts = await ethereum.request({method: 'eth_requestAccounts'});
+        if (accounts[0] !== currentAccount) {
+            currentAccount = accounts[0];
+            localStorage.setItem('sserdda', currentAccount)
+        }
+        let result = await xexContract.methods.balanceOf(currentAccount).call();
+        // Convert the value from Wei to Ether
+        const formattedResult = web3.utils.fromWei(result, "ether");
+        xexBalanceBlock.innerHTML = new Intl.NumberFormat("en-US").format(formattedResult)
+    } catch (error) {
+        console.log("getTokenBalanceError", error)
+    }
 }
 
 getTokenBalance();
