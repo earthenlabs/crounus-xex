@@ -1191,7 +1191,8 @@ const REVERTED_MESSAGES = {
 const ERROR_REVERTED_MESSAGES = {
     OUT_OF_REWARD_POOL: "Sorry. We’ve run out of XEX. Please come back later after we refill the reward pool.",
     INSUFFICIENT_XEX_FUND: "You don’t have enough XEX in your wallet.",
-    GAS_TRANSFER_FAILED: "Transaction failed. Please try again."
+    GAS_TRANSFER_FAILED: "Transaction failed. Please try again.",
+    INTERNAL: "Oop! Some thing went wrong!"
 }
 
 const isDisconnect = localStorage.getItem('disconnect')
@@ -1319,13 +1320,9 @@ async function approveToken() {
         await fight()
 
     } catch (e) {
-        const txHash = e.transaction.hash
-        await getTransactionRevertReason(txHash)
+        await getTransactionRevertReason(e)
         const timeout = setTimeout(() => {
-            confirmFightButton.classList.remove("loading-fight-button");
-            confirmFightButtonText.classList.remove("hidden");
-            backButton.classList.add("btn-input")
-            backButton.classList.remove("btn-disable-input")
+            handleChangeConfirmFightButtonStatus("none")
             clearTimeout(timeout);
         }, 1000);
     }
@@ -1361,28 +1358,41 @@ async function fight() {
             confirmFightButtonText.classList.remove("hidden");
         }
 
-
-
     } catch (e) {
-        const txHash = e.transaction.hash
-        await getTransactionRevertReason(txHash)
+        await getTransactionRevertReason(e)
         const timeout = setTimeout(() => {
-            confirmFightButton.classList.remove("loading-fight-button");
-            confirmFightButtonText.classList.remove("hidden");
-            backButton.classList.add("btn-input")
-            backButton.classList.remove("btn-disable-input")
+            handleChangeConfirmFightButtonStatus("none")
             clearTimeout(timeout);
         }, 1000);
     }
 }
 
-async function getTransactionRevertReason(txHash) {
+async function getTransactionRevertReason(exception) {
+    const txHash = exception.transaction?.hash
+    if (txHash) {
+        try {
+            const transaction = await provider.getTransaction(txHash);
+            let code = await provider.call(transaction, transaction.blockNumber)
+        } catch (err) {
+            const reason = err.data.message.replace("execution reverted: ", "")
+            switch (reason) {
+                case REVERTED_MESSAGES.OUT_OF_REWARD_POOL:
+                    errorText.innerHTML = ERROR_REVERTED_MESSAGES.OUT_OF_REWARD_POOL
+                    break;
+                case REVERTED_MESSAGES.INSUFFICIENT_XEX_FUND:
+                    errorText.innerHTML = ERROR_REVERTED_MESSAGES.INSUFFICIENT_XEX_FUND
+                    break;
+                default:
+                    errorText.innerHTML = ERROR_REVERTED_MESSAGES.GAS_TRANSFER_FAILED
+                    break;
+            }
+        }
+        errorContainer.classList.remove("hidden")
+        return
+    }
+
     try {
-        const transaction = await provider.getTransaction(txHash);
-        let code = await provider.call(transaction, transaction.blockNumber)
-    } catch (err) {
-        // const reason = ethers.utils.toUtf8String('0x' + err.data.data.substr(138));
-        const reason = err.data.message.replace("execution reverted: ", "")
+        const reason = exception.data.message.replace("execution reverted: ", "")
         switch (reason) {
             case REVERTED_MESSAGES.OUT_OF_REWARD_POOL:
                 errorText.innerHTML = ERROR_REVERTED_MESSAGES.OUT_OF_REWARD_POOL
@@ -1394,8 +1404,12 @@ async function getTransactionRevertReason(txHash) {
                 errorText.innerHTML = ERROR_REVERTED_MESSAGES.GAS_TRANSFER_FAILED
                 break;
         }
-        errorContainer.classList.remove("hidden")
+    } catch (err) {
+        console.log(err)
+        errorText.innerHTML = ERROR_REVERTED_MESSAGES.INTERNAL
     }
+
+    errorContainer.classList.remove("hidden")
 }
 
 async function getTokenBalance() {
@@ -1429,6 +1443,20 @@ function handlePermitButton() {
         item.classList.add("btn-fight")
     })
     currentDisableButtons = []
+}
+
+function handleChangeConfirmFightButtonStatus(status) {
+    if (status === "fight") {
+        confirmFightButton.classList.add("loading-fight-button")
+        confirmFightButtonText.classList.add("hidden")
+        backButton.classList.remove("btn-input")
+        backButton.classList.add("btn-disable-input")
+        return
+    }
+    confirmFightButton.classList.remove("loading-fight-button");
+    confirmFightButtonText.classList.remove("hidden");
+    backButton.classList.add("btn-input")
+    backButton.classList.remove("btn-disable-input")
 }
 
 function calculateReward() {
@@ -1468,10 +1496,38 @@ backButton.addEventListener("click", () => {
 })
 
 confirmFightButton.addEventListener("click", async () => {
-    confirmFightButton.classList.add("loading-fight-button")
-    confirmFightButtonText.classList.add("hidden")
-    backButton.classList.remove("btn-input")
-    backButton.classList.add("btn-disable-input")
+    handleChangeConfirmFightButtonStatus("fight")
+
+    try {
+        await ethereum.request({
+            method: 'wallet_switchEthereumChain',
+            params: [{ chainId: '0xfa' }],
+        })
+    } catch (switchError) {
+        // This error code indicates that the chain has not been added to MetaMask.
+        if (switchError.code === 4902) {
+            try {
+                await ethereum.request({
+                    method: 'wallet_addEthereumChain',
+                    params: [
+                        {
+                            chainId: '0xfa',
+                            chainName: 'Fantom Testnet',
+                            rpcUrls: ['https://rpc.ankr.com/fantom/'],
+                        },
+                    ],
+                })
+            } catch (addError) {
+                console.log(addError, addError.code);
+                handleChangeConfirmFightButtonStatus("none")
+            }
+        } else {
+            // handle other "switch" errors
+            console.log(switchError, switchError.code);
+            handleChangeConfirmFightButtonStatus("none")
+        }
+    }
+
     await approveToken()
 })
 
