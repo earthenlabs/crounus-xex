@@ -1335,8 +1335,7 @@ async function fight() {
     try {
         const tx = await crounusXEXcontract.playGame(playPoints, {
             value: "100000000000000000",
-            gasLimit: 6721975,
-            gasPrice: 20000000000,
+            gasPrice: 115000000000,
         });
         const rc = await tx.wait(); // 0ms, as tx is already confirmed
         const event = rc.events.find(event => event.event === 'PlayGame');
