@@ -1479,14 +1479,14 @@ function checkSoundOn() {
         audioPlayer.muted = false
         audioPlayer.play()
         isSoundOn = true
-        toggleSound.innerHTML = `<img src="/assets/icon/sound.svg" alt="kebab icon" class="w-6 h-6">`
+        toggleSound.innerHTML = `<img src="/assets/icon/sound-off.svg" alt="sound off icon" class="w-6 h-6">`
         localStorage.setItem('soundOn', 'true')
         return
     }
 
     audioPlayer.muted = true
     isSoundOn = false
-    toggleSound.innerHTML = `<img src="/assets/icon/sound-off.svg" alt="kebab icon" class="w-6 h-6">`
+    toggleSound.innerHTML = `<img src="/assets/icon/sound.svg" alt="sound on icon" class="w-6 h-6">`
     localStorage.setItem('soundOn', 'false')
 }
 

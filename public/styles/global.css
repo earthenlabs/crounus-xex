@@ -560,3 +560,7 @@ button {
     height: 90%;
     padding: 0.5rem;
 }
+
+#audio-player {
+    display: none;
+}
