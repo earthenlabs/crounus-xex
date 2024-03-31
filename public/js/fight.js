@@ -1521,13 +1521,17 @@ confirmFightButton.addEventListener("click", async () => {
                 console.log(addError, addError.code);
                 handleChangeConfirmFightButtonStatus("none")
             }
-        } else {
-            // handle other "switch" errors
-            console.log(switchError, switchError.code);
-            handleChangeConfirmFightButtonStatus("none")
+            return
         }
-    }
 
+        // handle other "switch" errors
+        console.log(switchError, switchError.code);
+        handleChangeConfirmFightButtonStatus("none")
+        console.log("tôtttoototototototo")
+        return
+
+    }
+    console.log("ggiggigiigiggiiggiigig")
     await approveToken()
 })
 
