@@ -1,4 +1,4 @@
-const CrounusXEXContractAddress = "0x9611Accf307788D5361bd3261e81c9b111C1cf3B"
+const CrounusXEXContractAddress = "0x87392db2862174f359574e2394a98626d006005F"
 const XEXContractAddress = "0xa41A879bcFdd75983a987FD6b68fae37777e8b28"
 const XDONContractAddress = "0x6ef08f3f88aa089a392fa2460543262a93d43637"
 
