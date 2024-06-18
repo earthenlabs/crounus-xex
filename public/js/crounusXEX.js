@@ -695,6 +695,7 @@ const disconnectButton = document.getElementById("disconnect-button")
 const disconnectContainer = document.getElementById("disconnect-container")
 const disconnectBackButton = document.getElementById("disconnect-back-button")
 const rankingButton = document.getElementById("ranking-button")
+const globalRankingButton = document.getElementById("global-ranking-button")
 const rankingCloseButton = document.getElementById("ranking-close-button")
 const rankingContainer = document.getElementById("ranking-container")
 const rankingContent = document.getElementById("ranking-content")
@@ -765,6 +766,26 @@ rankingButton.addEventListener("click", async () => {
     let row = ''
     try {
         const url = `${BASE_API_URL}/api/ranking`
+        const res = await fetch(url);
+        const data = await res.json()
+
+        const result = Array(...data.result)
+
+        result.forEach(function (datum, index) {
+            row += `<div class="user-ranking"><div class="user-no">${index + 1}</div><div class="user-address">${datum.user}</div><div class="user-point">${datum.point}</div></div>`
+        })
+    } catch (e) {
+        console.log(e)
+        row = ''
+    }
+
+    rankingContent.innerHTML = row
+    rankingContainer.classList.remove('hidden')
+})
+globalRankingButton.addEventListener("click", async () => {
+    let row = ''
+    try {
+        const url = `${BASE_API_URL}/api/global-ranking`
         const res = await fetch(url);
         const data = await res.json()
 
